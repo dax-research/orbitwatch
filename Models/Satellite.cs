@@ -38,4 +38,10 @@ public class Satellite
 
     public ICollection<TrajectoryRecord> TrajectoryRecords { get; set; }
     = new List<TrajectoryRecord>();
+
+    public ICollection<Incident> Incidents { get; set; }
+    = new List<Incident>();
+
+    public ICollection<SatelliteObservation> SatelliteObservations { get; set; }
+    = new List<SatelliteObservation>();
 }
