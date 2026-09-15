@@ -35,4 +35,7 @@ public class Satellite
     public int MissionId { get; set; }
 
     public Mission Mission { get; set; } = null!;
+
+    public ICollection<TrajectoryRecord> TrajectoryRecords { get; set; }
+    = new List<TrajectoryRecord>();
 }

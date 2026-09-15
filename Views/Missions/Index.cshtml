@@ -1,0 +1,79 @@
+@model IEnumerable<OrbitWatch.Models.Mission>
+
+@{
+    ViewData["Title"] = "Mission Register";
+}
+
+<section class="mission-page">
+    <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3 mb-4">
+        <div>
+            <div class="mission-eyebrow mb-2">Operations / Mission register</div>
+            <h1 class="mission-title display-6 mb-2">Mission control</h1>
+            <p class="mission-subtitle mb-0">Track mission milestones, ownership, and operational state from a single command view.</p>
+        </div>
+        <a asp-action="Create" class="mission-button text-decoration-none"><span aria-hidden="true">+</span> Create mission</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="mission-alert px-3 py-2 mb-4" role="status">@successMessage</div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="mission-panel overflow-hidden">
+            <div class="table-responsive">
+                <table class="table mission-table align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="ps-4">Mission</th>
+                            <th scope="col">Agency</th>
+                            <th scope="col">Launch</th>
+                            <th scope="col">End</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var mission in Model)
+                        {
+                            var statusClass = mission.Status.ToLowerInvariant() switch
+                            {
+                                "active" => "mission-status--active",
+                                "planned" => "mission-status--planned",
+                                "complete" or "completed" => "mission-status--completed",
+                                _ => "mission-status--default"
+                            };
+                            <tr>
+                                <td class="ps-4">
+                                    <a asp-action="Details" asp-route-id="@mission.Id" class="mission-name">@mission.Name</a>
+                                    <div class="mission-meta mt-1">@mission.Satellites.Count satellite@(mission.Satellites.Count == 1 ? "" : "s") assigned</div>
+                                </td>
+                                <td>@mission.Agency</td>
+                                <td>@mission.LaunchDate.ToString("dd MMM yyyy")</td>
+                                <td>@(mission.EndDate?.ToString("dd MMM yyyy") ?? "—")</td>
+                                <td><span class="mission-status @statusClass">@mission.Status</span></td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex gap-3">
+                                        <a asp-action="Details" asp-route-id="@mission.Id" class="mission-action">Details</a>
+                                        <a asp-action="Edit" asp-route-id="@mission.Id" class="mission-action">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@mission.Id" class="mission-action mission-action--danger">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mission-empty">
+            <div class="mission-eyebrow mb-2">No telemetry yet</div>
+            <h2 class="h4 text-white">Your mission register is clear.</h2>
+            <p class="mb-4">Create the first mission to begin organizing OrbitWatch operations.</p>
+            <a asp-action="Create" class="mission-button text-decoration-none">Create first mission</a>
+        </div>
+    }
+</section>
