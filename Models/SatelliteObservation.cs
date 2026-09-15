@@ -14,10 +14,10 @@ namespace OrbitWatch.Models
 
         [Required]
         [StringLength(100)]
-        public string ObservationType { get; set; }
+        public required string ObservationType { get; set; }
 
         [StringLength(500)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public double? Temperature { get; set; }
 
@@ -25,9 +25,8 @@ namespace OrbitWatch.Models
 
         [Required]
         [StringLength(100)]
-        public string GroundStation { get; set; }
+        public required string GroundStation { get; set; }
 
-        // Navigation property
-        public Satellite Satellite { get; set; }
+        public required Satellite Satellite { get; set; }
     }
 }

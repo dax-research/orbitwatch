@@ -11,24 +11,23 @@ namespace OrbitWatch.Models
 
         [Required]
         [StringLength(100)]
-        public string Type { get; set; }
+        public required string Type { get; set; }
 
         [Required]
         [StringLength(500)]
-        public string Description { get; set; }
+        public required string Description { get; set; }
 
         [Required]
         public DateTime OccurredAt { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Severity { get; set; }
+        public required string Severity { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Status { get; set; }
+        public required string Status { get; set; }
 
-        // Navigation property
-        public Satellite Satellite { get; set; }
+        public required Satellite Satellite { get; set; }
     }
 }

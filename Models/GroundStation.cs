@@ -8,20 +8,20 @@ namespace OrbitWatch.Models
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Location { get; set; }
+        public required string Location { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Country { get; set; }
+        public required string Country { get; set; }
 
         [StringLength(100)]
-        public string Operator { get; set; }
+        public string? Operator { get; set; }
 
         [StringLength(50)]
-        public string Status { get; set; }
+        public string? Status { get; set; }
     }
 }

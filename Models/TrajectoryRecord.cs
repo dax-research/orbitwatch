@@ -9,6 +9,7 @@ namespace OrbitWatch.Models
         [Required]
         public int SatelliteId { get; set; }
 
+        [Required]
         public DateTime RecordedAt { get; set; }
 
         public double Latitude { get; set; }
@@ -19,10 +20,10 @@ namespace OrbitWatch.Models
 
         public double Velocity { get; set; }
 
+        [Required]
         [StringLength(100)]
-        public string OrbitType { get; set; }
+        public required string OrbitType { get; set; }
 
-        // Navigation property
-        public Satellite Satellite { get; set; }
+        public required Satellite Satellite { get; set; }
     }
 }
