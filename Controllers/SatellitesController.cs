@@ -48,6 +48,16 @@ namespace OrbitWatch.Controllers
         {
             ModelState.Remove(nameof(satellite.Mission));
 
+            if (await _repository.NoradIdExistsAsync(satellite.NoradId))
+            {
+                ModelState.AddModelError(nameof(satellite.NoradId), "A satellite with this NORAD ID already exists.");
+            }
+
+            if (!await _repository.MissionExistsAsync(satellite.MissionId))
+            {
+                ModelState.AddModelError(nameof(satellite.MissionId), "Select an existing mission.");
+            }
+
             if (!ModelState.IsValid)
             {
                 await PopulateMissionsDropDownList(satellite.MissionId);
@@ -83,6 +93,16 @@ namespace OrbitWatch.Controllers
             }
 
             ModelState.Remove(nameof(satellite.Mission));
+
+            if (await _repository.NoradIdExistsAsync(satellite.NoradId, satellite.Id))
+            {
+                ModelState.AddModelError(nameof(satellite.NoradId), "A satellite with this NORAD ID already exists.");
+            }
+
+            if (!await _repository.MissionExistsAsync(satellite.MissionId))
+            {
+                ModelState.AddModelError(nameof(satellite.MissionId), "Select an existing mission.");
+            }
 
             if (!ModelState.IsValid)
             {

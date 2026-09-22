@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using OrbitWatch.Validation;
 
 namespace OrbitWatch.Models
 {
@@ -18,14 +19,19 @@ namespace OrbitWatch.Models
         public required string Description { get; set; }
 
         [Required]
+        [NotFuture(ErrorMessage = "An incident cannot occur in the future.")]
         public DateTime OccurredAt { get; set; }
 
         [Required]
         [StringLength(50)]
+        [AllowedValues("Low", "Medium", "High", "Critical",
+            ErrorMessage = "Select a valid severity.")]
         public required string Severity { get; set; }
 
         [Required]
         [StringLength(50)]
+        [AllowedValues("Open", "Investigating", "Resolved", "Closed",
+            ErrorMessage = "Select a valid incident status.")]
         public required string Status { get; set; }
 
         public required Satellite Satellite { get; set; }

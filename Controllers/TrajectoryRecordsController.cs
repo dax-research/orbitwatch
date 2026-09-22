@@ -46,6 +46,11 @@ namespace OrbitWatch.Controllers
         {
             ModelState.Remove(nameof(record.Satellite));
 
+            if (!await _repository.SatelliteExistsAsync(record.SatelliteId))
+            {
+                ModelState.AddModelError(nameof(record.SatelliteId), "Select an existing satellite.");
+            }
+
             if (!ModelState.IsValid)
             {
                 await PopulateSatellitesDropDownList(record.SatelliteId);
@@ -80,6 +85,11 @@ namespace OrbitWatch.Controllers
             }
 
             ModelState.Remove(nameof(record.Satellite));
+
+            if (!await _repository.SatelliteExistsAsync(record.SatelliteId))
+            {
+                ModelState.AddModelError(nameof(record.SatelliteId), "Select an existing satellite.");
+            }
 
             if (!ModelState.IsValid)
             {

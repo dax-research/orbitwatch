@@ -53,6 +53,14 @@ namespace OrbitWatch.Data
                 .WithMany(s => s.SatelliteObservations)
                 .HasForeignKey(o => o.SatelliteId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Satellite>()
+                .HasIndex(s => s.NoradId)
+                .IsUnique();
+
+            modelBuilder.Entity<GroundStation>()
+                .HasIndex(g => g.Name)
+                .IsUnique();
         }
     }
 }

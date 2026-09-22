@@ -62,5 +62,17 @@ namespace OrbitWatch.Repositories
         {
             return await _context.Missions.ToListAsync();
         }
+
+        public async Task<bool> MissionExistsAsync(int missionId)
+        {
+            return await _context.Missions.AnyAsync(m => m.Id == missionId);
+        }
+
+        public async Task<bool> NoradIdExistsAsync(int noradId, int? excludeSatelliteId = null)
+        {
+            return await _context.Satellites.AnyAsync(s =>
+                s.NoradId == noradId
+                && (!excludeSatelliteId.HasValue || s.Id != excludeSatelliteId.Value));
+        }
     }
 }

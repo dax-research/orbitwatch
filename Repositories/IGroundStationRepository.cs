@@ -10,5 +10,6 @@ namespace OrbitWatch.Repositories
         Task UpdateAsync(GroundStation station);
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
+        Task<bool> NameExistsAsync(string name, int? excludeStationId = null);
     }
 }

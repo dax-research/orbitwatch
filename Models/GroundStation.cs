@@ -2,7 +2,7 @@
 
 namespace OrbitWatch.Models
 {
-    public class GroundStation
+    public class GroundStation : IValidatableObject
     {
         public int Id { get; set; }
 
@@ -23,5 +23,21 @@ namespace OrbitWatch.Models
 
         [StringLength(50)]
         public string? Status { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrWhiteSpace(Status))
+            {
+                yield break;
+            }
+
+            string[] allowed = ["Operational", "Maintenance", "Offline", "Decommissioned"];
+            if (!allowed.Contains(Status, StringComparer.OrdinalIgnoreCase))
+            {
+                yield return new ValidationResult(
+                    "Select a valid ground station status.",
+                    [nameof(Status)]);
+            }
+        }
     }
 }

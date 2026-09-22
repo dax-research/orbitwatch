@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using OrbitWatch.Validation;
 
 namespace OrbitWatch.Models;
 
@@ -22,14 +23,19 @@ public class Satellite
     public string Operator { get; set; } = string.Empty;
 
     [DataType(DataType.Date)]
+    [NotFuture(DateOnly = true, ErrorMessage = "Satellite launch date cannot be in the future.")]
     public DateTime LaunchDate { get; set; }
 
     [Required]
     [StringLength(50)]
+    [AllowedValues("Active", "Inactive", "Decommissioned", "In Testing",
+        ErrorMessage = "Select a valid satellite status.")]
     public string Status { get; set; } = string.Empty;
 
     [Required]
     [StringLength(50)]
+    [AllowedValues("LEO", "MEO", "GEO", "HEO", "SSO",
+        ErrorMessage = "Select a valid orbit type.")]
     public string OrbitType { get; set; } = string.Empty;
 
     public int MissionId { get; set; }

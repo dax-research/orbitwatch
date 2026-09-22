@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using OrbitWatch.Validation;
 
 namespace OrbitWatch.Models
 {
-    public class SatelliteObservation
+    public class SatelliteObservation : IValidatableObject
     {
         public int Id { get; set; }
 
@@ -10,10 +11,13 @@ namespace OrbitWatch.Models
         public int SatelliteId { get; set; }
 
         [Required]
+        [NotFuture(ErrorMessage = "An observation cannot be recorded in the future.")]
         public DateTime ObservedAt { get; set; }
 
         [Required]
         [StringLength(100)]
+        [AllowedValues("Optical", "Radar", "Telemetry", "Spectrometric", "Thermal",
+            ErrorMessage = "Select a valid observation type.")]
         public required string ObservationType { get; set; }
 
         [StringLength(500)]
@@ -28,5 +32,15 @@ namespace OrbitWatch.Models
         public required string GroundStation { get; set; }
 
         public required Satellite Satellite { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Temperature.HasValue && Temperature.Value < -273.15)
+            {
+                yield return new ValidationResult(
+                    "Temperature cannot be below absolute zero (-273.15 °C).",
+                    [nameof(Temperature)]);
+            }
+        }
     }
 }

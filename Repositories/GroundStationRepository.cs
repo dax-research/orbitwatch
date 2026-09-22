@@ -49,5 +49,12 @@ namespace OrbitWatch.Repositories
         {
             return await _context.GroundStations.AnyAsync(g => g.Id == id);
         }
+
+        public async Task<bool> NameExistsAsync(string name, int? excludeStationId = null)
+        {
+            return await _context.GroundStations.AnyAsync(g =>
+                g.Name == name
+                && (!excludeStationId.HasValue || g.Id != excludeStationId.Value));
+        }
     }
 }

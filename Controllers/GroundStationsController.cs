@@ -42,6 +42,11 @@ namespace OrbitWatch.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GroundStation station)
         {
+            if (await _repository.NameExistsAsync(station.Name))
+            {
+                ModelState.AddModelError(nameof(station.Name), "A ground station with this name already exists.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(station);
@@ -70,6 +75,11 @@ namespace OrbitWatch.Controllers
             if (id != station.Id)
             {
                 return NotFound();
+            }
+
+            if (await _repository.NameExistsAsync(station.Name, station.Id))
+            {
+                ModelState.AddModelError(nameof(station.Name), "A ground station with this name already exists.");
             }
 
             if (!ModelState.IsValid)
