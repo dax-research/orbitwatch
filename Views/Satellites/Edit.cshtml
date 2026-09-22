@@ -1,0 +1,94 @@
+@model OrbitWatch.Models.Satellite
+
+@{
+    ViewData["Title"] = "Edit Satellite";
+}
+
+<section class="ow-page">
+    <div class="ow-page-header">
+        <div>
+            <div class="ow-eyebrow">Satellite Network / Update Record</div>
+            <h1 class="ow-page-title">Edit Satellite</h1>
+            <p class="ow-page-subtitle">Update the asset record for <strong>@Model.Name</strong>.</p>
+        </div>
+    </div>
+
+    <div class="ow-form-wrap">
+        <form asp-action="Edit" method="post" novalidate>
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="ow-validation-summary"></div>
+
+            <div class="ow-form-grid">
+                <div class="ow-field ow-field--wide">
+                    <label asp-for="Name" class="ow-label"></label>
+                    <input asp-for="Name" class="ow-input" />
+                    <span asp-validation-for="Name" class="ow-field-error"></span>
+                </div>
+
+                <div class="ow-field">
+                    <label asp-for="NoradId" class="ow-label"></label>
+                    <input asp-for="NoradId" class="ow-input" />
+                    <span asp-validation-for="NoradId" class="ow-field-error"></span>
+                </div>
+
+                <div class="ow-field">
+                    <label asp-for="Country" class="ow-label"></label>
+                    <input asp-for="Country" class="ow-input" />
+                    <span asp-validation-for="Country" class="ow-field-error"></span>
+                </div>
+
+                <div class="ow-field ow-field--wide">
+                    <label asp-for="Operator" class="ow-label"></label>
+                    <input asp-for="Operator" class="ow-input" />
+                    <span asp-validation-for="Operator" class="ow-field-error"></span>
+                </div>
+
+                <div class="ow-field">
+                    <label asp-for="LaunchDate" class="ow-label"></label>
+                    <input asp-for="LaunchDate" class="ow-input" />
+                    <span asp-validation-for="LaunchDate" class="ow-field-error"></span>
+                </div>
+
+                <div class="ow-field">
+                    <label asp-for="Status" class="ow-label"></label>
+                    <select asp-for="Status" class="ow-select">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                        <option>Decommissioned</option>
+                        <option>In Testing</option>
+                    </select>
+                    <span asp-validation-for="Status" class="ow-field-error"></span>
+                </div>
+
+                <div class="ow-field">
+                    <label asp-for="OrbitType" class="ow-label"></label>
+                    <select asp-for="OrbitType" class="ow-select">
+                        <option>LEO</option>
+                        <option>MEO</option>
+                        <option>GEO</option>
+                        <option>HEO</option>
+                        <option>SSO</option>
+                    </select>
+                    <span asp-validation-for="OrbitType" class="ow-field-error"></span>
+                </div>
+
+                <div class="ow-field">
+                    <label asp-for="MissionId" class="ow-label"></label>
+                    <select asp-for="MissionId" asp-items="ViewBag.MissionId" class="ow-select">
+                        <option value="">Select mission</option>
+                    </select>
+                    <span asp-validation-for="MissionId" class="ow-field-error"></span>
+                </div>
+            </div>
+
+            <div class="ow-form-actions">
+                <button type="submit" class="ow-btn">Save Changes →</button>
+                <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

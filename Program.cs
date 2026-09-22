@@ -14,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IMissionRepository, MissionRepository>();
+builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
 
 var app = builder.Build();
 

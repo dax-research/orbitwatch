@@ -1,0 +1,70 @@
+@model IEnumerable<OrbitWatch.Models.Satellite>
+
+@{
+    ViewData["Title"] = "Satellite Network";
+}
+
+<section class="ow-page">
+    <div class="ow-page-header">
+        <div>
+            <div class="ow-eyebrow">Satellite Network / Catalogue</div>
+            <h1 class="ow-page-title">Satellites</h1>
+            <p class="ow-page-subtitle">Technical catalogue of all tracked orbital assets.</p>
+        </div>
+        <a asp-action="Create" class="ow-btn">+ Add Satellite</a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="ow-list">
+            @{ int index = 1; }
+            @foreach (var satellite in Model)
+            {
+                var statusClass = satellite.Status.ToLowerInvariant() switch
+                {
+                    "active"    => "ow-status--active",
+                    "inactive"  => "ow-status--inactive",
+                    "decommissioned" => "ow-status--decommissioned",
+                    _           => "ow-status--default"
+                };
+
+                <div class="ow-list-row">
+                    <div class="ow-list-index">@index.ToString("D2")</div>
+                    <div class="ow-list-body">
+                        <div class="ow-list-title">
+                            <a asp-action="Details" asp-route-id="@satellite.Id" class="ow-link">@satellite.Name</a>
+                        </div>
+                        <div class="ow-list-meta">
+                            NORAD @satellite.NoradId
+                            &nbsp;&middot;&nbsp;
+                            @satellite.OrbitType
+                            &nbsp;&middot;&nbsp;
+                            @satellite.Country
+                        </div>
+                    </div>
+                    <div class="ow-list-aside">
+                        <div class="ow-list-detail">@satellite.Mission?.Name ?? "—"</div>
+                        <div class="ow-list-meta">@satellite.LaunchDate.ToString("dd MMM yyyy")</div>
+                    </div>
+                    <div class="ow-list-status">
+                        <span class="ow-status @statusClass">@satellite.Status</span>
+                    </div>
+                    <div class="ow-list-actions">
+                        <a asp-action="Details" asp-route-id="@satellite.Id" class="ow-action">Details</a>
+                        <a asp-action="Edit"    asp-route-id="@satellite.Id" class="ow-action">Edit</a>
+                        <a asp-action="Delete"  asp-route-id="@satellite.Id" class="ow-action ow-action--danger">Delete</a>
+                    </div>
+                </div>
+                index++;
+            }
+        </div>
+    }
+    else
+    {
+        <div class="ow-empty">
+            <div class="ow-eyebrow">No assets registered</div>
+            <p>No satellites have been added to the network yet.</p>
+            <a asp-action="Create" class="ow-btn">Add first satellite</a>
+        </div>
+    }
+</section>

@@ -1,0 +1,43 @@
+@model OrbitWatch.Models.Satellite
+
+@{
+    ViewData["Title"] = "Delete Satellite";
+}
+
+<section class="ow-page">
+    <div class="ow-page-header">
+        <div>
+            <div class="ow-eyebrow">Satellite Network / Confirmation Required</div>
+            <h1 class="ow-page-title">Delete Satellite?</h1>
+            <p class="ow-page-subtitle">This action will permanently remove the asset record.</p>
+        </div>
+    </div>
+
+    <div class="ow-form-wrap">
+        <div class="ow-warning-box">
+            <strong>Destructive action.</strong>
+            Deleting this satellite will also remove all associated trajectory records, incidents, and observations. This cannot be undone.
+        </div>
+
+        <dl class="ow-dl ow-dl--confirm">
+            <dt>Satellite</dt>
+            <dd>@Model.Name</dd>
+            <dt>NORAD ID</dt>
+            <dd>@Model.NoradId</dd>
+            <dt>Operator</dt>
+            <dd>@Model.Operator</dd>
+            <dt>Country</dt>
+            <dd>@Model.Country</dd>
+            <dt>Status</dt>
+            <dd>@Model.Status</dd>
+            <dt>Mission</dt>
+            <dd>@(Model.Mission?.Name ?? "—")</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post" class="ow-form-actions">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="ow-btn ow-btn--danger">Delete Satellite</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Cancel</a>
+        </form>
+    </div>
+</section>
