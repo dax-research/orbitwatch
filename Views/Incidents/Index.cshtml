@@ -1,0 +1,48 @@
+@model IEnumerable<OrbitWatch.Models.Incident>
+
+@{
+    ViewData["Title"] = "Incidents";
+}
+
+<h1>Incident Log</h1>
+
+<p><a asp-action="Create">+ Log Incident</a></p>
+
+@if (Model.Any())
+{
+    <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Satellite</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Occurred</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var incident in Model)
+            {
+                <tr>
+                    <td>@incident.Id</td>
+                    <td>@incident.Type</td>
+                    <td>@incident.Satellite?.Name</td>
+                    <td>@incident.Severity</td>
+                    <td>@incident.Status</td>
+                    <td>@incident.OccurredAt.ToString("dd MMM yyyy HH:mm")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@incident.Id">Details</a> |
+                        <a asp-action="Edit"    asp-route-id="@incident.Id">Edit</a> |
+                        <a asp-action="Delete"  asp-route-id="@incident.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No incidents recorded.</p>
+}

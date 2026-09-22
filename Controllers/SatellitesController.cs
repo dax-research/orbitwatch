@@ -46,6 +46,8 @@ namespace OrbitWatch.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Satellite satellite)
         {
+            ModelState.Remove(nameof(satellite.Mission));
+
             if (!ModelState.IsValid)
             {
                 await PopulateMissionsDropDownList(satellite.MissionId);
@@ -79,6 +81,8 @@ namespace OrbitWatch.Controllers
             {
                 return NotFound();
             }
+
+            ModelState.Remove(nameof(satellite.Mission));
 
             if (!ModelState.IsValid)
             {

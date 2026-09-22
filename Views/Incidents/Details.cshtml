@@ -1,0 +1,33 @@
+@model OrbitWatch.Models.Incident
+
+@{
+    ViewData["Title"] = "Incident Details";
+}
+
+<h1>Incident Details</h1>
+
+<dl>
+    <dt>Type</dt>
+    <dd>@Model.Type</dd>
+    <dt>Satellite</dt>
+    <dd>
+        @if (Model.Satellite != null)
+        {
+            <a asp-controller="Satellites" asp-action="Details" asp-route-id="@Model.Satellite.Id">@Model.Satellite.Name</a>
+        }
+    </dd>
+    <dt>Severity</dt>
+    <dd>@Model.Severity</dd>
+    <dt>Status</dt>
+    <dd>@Model.Status</dd>
+    <dt>Occurred At</dt>
+    <dd>@Model.OccurredAt.ToString("dd MMMM yyyy HH:mm")</dd>
+    <dt>Description</dt>
+    <dd>@Model.Description</dd>
+</dl>
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
+    <a asp-action="Index">Back to list</a>
+</p>

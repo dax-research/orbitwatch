@@ -1,0 +1,28 @@
+@model OrbitWatch.Models.Incident
+
+@{
+    ViewData["Title"] = "Delete Incident";
+}
+
+<h1>Delete Incident?</h1>
+
+<p>Are you sure you want to delete this incident? This action cannot be undone.</p>
+
+<dl>
+    <dt>Type</dt>
+    <dd>@Model.Type</dd>
+    <dt>Satellite</dt>
+    <dd>@Model.Satellite?.Name</dd>
+    <dt>Severity</dt>
+    <dd>@Model.Severity</dd>
+    <dt>Status</dt>
+    <dd>@Model.Status</dd>
+    <dt>Occurred At</dt>
+    <dd>@Model.OccurredAt.ToString("dd MMMM yyyy HH:mm")</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit">Yes, Delete</button>
+    <a asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+</form>
