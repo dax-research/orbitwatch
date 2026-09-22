@@ -1,14 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using OrbitWatch.Models;
+using OrbitWatch.Repositories;
 using System.Diagnostics;
 
 namespace OrbitWatch.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IDashboardRepository _dashboardRepository;
+
+        public HomeController(IDashboardRepository dashboardRepository)
         {
-            return View();
+            _dashboardRepository = dashboardRepository;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var statistics = await _dashboardRepository.GetStatisticsAsync();
+
+            return View(statistics);
         }
 
         public IActionResult Privacy()

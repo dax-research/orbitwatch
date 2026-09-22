@@ -1,3 +1,4 @@
+@model OrbitWatch.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Operations Center";
 }
@@ -50,7 +51,7 @@
 <section class="ow-stats-strip">
     <div class="ow-stat-cell">
         <div class="ow-tag">NETWORK STATUS</div>
-        <div class="ow-stat-number">24</div>
+        <div class="ow-stat-number">@Model.TrackedSatellites.ToString("D2")</div>
         <div>
             <div class="ow-stat-label">Tracked Satellites</div>
             <div class="ow-stat-meta">Active In Orbit</div>
@@ -59,7 +60,7 @@
 
     <div class="ow-stat-cell">
         <div class="ow-tag">OPERATIONAL</div>
-        <div class="ow-stat-number">08</div>
+        <div class="ow-stat-number">@Model.ActiveMissions.ToString("D2")</div>
         <div>
             <div class="ow-stat-label">Active Missions</div>
             <div class="ow-stat-meta">Exploration Programs</div>
@@ -68,7 +69,7 @@
 
     <div class="ow-stat-cell">
         <div class="ow-tag" style="color: var(--ow-red);">CRITICAL ALERT</div>
-        <div class="ow-stat-number" style="color: var(--ow-red);">03</div>
+        <div class="ow-stat-number" style="color: var(--ow-red);">@Model.OpenIncidents.ToString("D2")</div>
         <div>
             <div class="ow-stat-label">Open Incidents</div>
             <div class="ow-stat-meta">Under Active Review</div>
@@ -77,7 +78,7 @@
 
     <div class="ow-stat-cell">
         <div class="ow-tag">GLOBAL COVERAGE</div>
-        <div class="ow-stat-number">12</div>
+        <div class="ow-stat-number">@Model.GroundStations.ToString("D2")</div>
         <div>
             <div class="ow-stat-label">Ground Stations</div>
             <div class="ow-stat-meta">Receiving Telemetry</div>

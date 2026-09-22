@@ -19,6 +19,7 @@ builder.Services.AddScoped<IIncidentRepository, IncidentRepository>();
 builder.Services.AddScoped<ITrajectoryRecordRepository, TrajectoryRecordRepository>();
 builder.Services.AddScoped<ISatelliteObservationRepository, SatelliteObservationRepository>();
 builder.Services.AddScoped<IGroundStationRepository, GroundStationRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 var app = builder.Build();
 
