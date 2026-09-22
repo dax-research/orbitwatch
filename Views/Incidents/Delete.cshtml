@@ -1,28 +1,39 @@
 @model OrbitWatch.Models.Incident
 
 @{
-    ViewData["Title"] = "Delete Incident";
+    ViewData["Title"] = $"Purge Incident #{Model.Id} — Flight Operations";
 }
 
-<h1>Delete Incident?</h1>
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow" style="color: var(--ow-red);">ANOMALY LOG // RECORD EXPUNGEMENT</div>
+        <h1 class="ow-page-title">Delete Incident?</h1>
+        <p class="ow-page-subtitle">Confirm permanent removal of Incident #@Model.Id from the operational registry.</p>
+    </div>
+</section>
 
-<p>Are you sure you want to delete this incident? This action cannot be undone.</p>
+<div class="ow-form-wrap">
+    <div class="ow-warning-box">
+        <strong>CAUTION: EXPUNGING ANOMALY DATA</strong><br />
+        This action will permanently delete this incident record from the flight telemetry archive. This cannot be undone.
+    </div>
 
-<dl>
-    <dt>Type</dt>
-    <dd>@Model.Type</dd>
-    <dt>Satellite</dt>
-    <dd>@Model.Satellite?.Name</dd>
-    <dt>Severity</dt>
-    <dd>@Model.Severity</dd>
-    <dt>Status</dt>
-    <dd>@Model.Status</dd>
-    <dt>Occurred At</dt>
-    <dd>@Model.OccurredAt.ToString("dd MMMM yyyy HH:mm")</dd>
-</dl>
+    <dl class="ow-dl" style="margin-bottom: 2.5rem;">
+        <dt>Anomaly Type</dt>
+        <dd>@Model.Type</dd>
+        <dt>Impacted Asset</dt>
+        <dd>@(Model.Satellite?.Name ?? "Unassigned")</dd>
+        <dt>Severity</dt>
+        <dd>@Model.Severity</dd>
+        <dt>Status</dt>
+        <dd>@Model.Status</dd>
+        <dt>Timestamp</dt>
+        <dd>@Model.OccurredAt.ToString("dd MMMM yyyy HH:mm:ss") UTC</dd>
+    </dl>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit">Yes, Delete</button>
-    <a asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
-</form>
+    <form asp-action="Delete" method="post" class="ow-form-actions">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="ow-btn ow-btn--danger">Execute Removal</button>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Abort &amp; Return</a>
+    </form>
+</div>

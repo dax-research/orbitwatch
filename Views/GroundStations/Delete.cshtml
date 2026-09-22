@@ -1,0 +1,39 @@
+@model OrbitWatch.Models.GroundStation
+
+@{
+    ViewData["Title"] = $"Decommission {Model.Name} — Ground Station";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow" style="color: var(--ow-red);">TERRESTRIAL DOWNLINK // STATION DECOMMISSION</div>
+        <h1 class="ow-page-title">Delete Ground Station?</h1>
+        <p class="ow-page-subtitle">Confirm permanent decommissioning of facility <strong>@Model.Name</strong>.</p>
+    </div>
+</section>
+
+<div class="ow-form-wrap">
+    <div class="ow-warning-box">
+        <strong>DECOMMISSIONING TERRESTRIAL RELAY:</strong><br />
+        This action permanently removes this ground station from the tracking network. Future telemetry passes will not route through this facility.
+    </div>
+
+    <dl class="ow-dl" style="margin-bottom: 2.5rem;">
+        <dt>Facility Name</dt>
+        <dd>@Model.Name</dd>
+        <dt>Location</dt>
+        <dd>@Model.Location</dd>
+        <dt>Host Country</dt>
+        <dd>@Model.Country</dd>
+        <dt>Operating Authority</dt>
+        <dd>@(Model.Operator ?? "—")</dd>
+        <dt>Status</dt>
+        <dd>@(Model.Status ?? "Operational")</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post" class="ow-form-actions">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="ow-btn ow-btn--danger">Execute Decommission</button>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Abort &amp; Return</a>
+    </form>
+</div>

@@ -1,0 +1,66 @@
+@model OrbitWatch.Models.GroundStation
+
+@{
+    ViewData["Title"] = "Register Ground Station";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">TERRESTRIAL DOWNLINK // NETWORK EXPANSION</div>
+        <h1 class="ow-page-title">Add Ground Station</h1>
+        <p class="ow-page-subtitle">Commission a new parabolic antenna dish array, optical receiver, or tracking station into the OrbitWatch network.</p>
+    </div>
+</section>
+
+<div class="ow-form-wrap">
+    <form asp-action="Create" method="post" novalidate>
+        <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+        <div class="ow-form-grid">
+            <div class="ow-field ow-field--wide">
+                <label asp-for="Name" class="ow-label">FACILITY / STATION DESIGNATION</label>
+                <input asp-for="Name" class="ow-input" placeholder="e.g. Kiruna Satellite Station" />
+                <span asp-validation-for="Name" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Location" class="ow-label">GEOGRAPHIC COORDINATES / SITE</label>
+                <input asp-for="Location" class="ow-input" placeholder="e.g. 67.8557° N, 20.2251° E" />
+                <span asp-validation-for="Location" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Country" class="ow-label">HOST NATION / TERRITORY</label>
+                <input asp-for="Country" class="ow-input" placeholder="e.g. Sweden" />
+                <span asp-validation-for="Country" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Operator" class="ow-label">OPERATING ENTITY / AGENCY</label>
+                <input asp-for="Operator" class="ow-input" placeholder="e.g. Swedish Space Corporation / ESA" />
+                <span asp-validation-for="Operator" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Status" class="ow-label">OPERATIONAL READINESS</label>
+                <select asp-for="Status" class="ow-select">
+                    <option value="">-- Select Status --</option>
+                    <option>Operational</option>
+                    <option>Maintenance</option>
+                    <option>Offline</option>
+                    <option>Decommissioned</option>
+                </select>
+                <span asp-validation-for="Status" class="ow-field-error"></span>
+            </div>
+        </div>
+
+        <div class="ow-form-actions">
+            <button type="submit" class="ow-btn">Commission Ground Station →</button>
+            <a asp-action="Index" class="ow-btn ow-btn--secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

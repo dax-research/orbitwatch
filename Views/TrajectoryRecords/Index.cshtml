@@ -1,0 +1,81 @@
+@model IEnumerable<OrbitWatch.Models.TrajectoryRecord>
+
+@{
+    ViewData["Title"] = "Telemetry Archive";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">CELESTIAL EPHEMERIS // TELEMETRY DOWNLINK</div>
+        <h1 class="ow-page-title">Trajectory Archive</h1>
+        <p class="ow-page-subtitle">Sub-kilometer celestial coordinate records, apogee/perigee altitude measurements, and orbital velocity vectors.</p>
+    </div>
+    <div>
+        <a asp-action="Create" class="ow-btn">+ Log Telemetry Vector</a>
+    </div>
+</section>
+
+@if (Model.Any())
+{
+    <div class="ow-table-wrap">
+        <table class="ow-table">
+            <thead>
+                <tr>
+                    <th># ID</th>
+                    <th>Satellite Asset</th>
+                    <th>Recorded (UTC)</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Altitude (km)</th>
+                    <th>Velocity (km/s)</th>
+                    <th>Orbit Class</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model.OrderByDescending(r => r.RecordedAt))
+                {
+                    <tr>
+                        <td style="font-family: var(--font-mono); font-weight: 700; color: #888;">@record.Id.ToString("D4")</td>
+                        <td>
+                            <strong style="font-size: 1.05rem;">
+                                @if (record.Satellite != null)
+                                {
+                                    <a asp-controller="Satellites" asp-action="Details" asp-route-id="@record.Satellite.Id" class="ow-action">
+                                        @record.Satellite.Name
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span>—</span>
+                                }
+                            </strong>
+                        </td>
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem;">
+                            @record.RecordedAt.ToString("dd MMM yyyy HH:mm:ss")
+                        </td>
+                        <td style="font-family: var(--font-mono); font-weight: 600;">@record.Latitude.ToString("F4")°</td>
+                        <td style="font-family: var(--font-mono); font-weight: 600;">@record.Longitude.ToString("F4")°</td>
+                        <td style="font-family: var(--font-mono); font-weight: 700;">@record.Altitude.ToString("N1")</td>
+                        <td style="font-family: var(--font-mono); font-weight: 700;">@record.Velocity.ToString("F2")</td>
+                        <td><span class="ow-status">@record.OrbitType</span></td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <a asp-action="Details" asp-route-id="@record.Id" class="ow-action" style="margin-right: 0.75rem;">Details</a>
+                            <a asp-action="Edit" asp-route-id="@record.Id" class="ow-action" style="margin-right: 0.75rem;">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@record.Id" class="ow-action ow-action--danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="ow-empty">
+        <div class="ow-eyebrow" style="justify-content: center;">TELEMETRY STREAM OFFLINE</div>
+        <h2 style="font-size: 2.2rem; margin: 1rem 0;">No coordinate vectors logged.</h2>
+        <p style="color: #666; margin-bottom: 2rem;">Acquire celestial coordinates from ground stations to seed the archive.</p>
+        <a asp-action="Create" class="ow-btn">+ Log First Telemetry Vector</a>
+    </div>
+}

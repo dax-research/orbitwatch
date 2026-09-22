@@ -16,6 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IMissionRepository, MissionRepository>();
 builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
 builder.Services.AddScoped<IIncidentRepository, IncidentRepository>();
+builder.Services.AddScoped<ITrajectoryRecordRepository, TrajectoryRecordRepository>();
+builder.Services.AddScoped<ISatelliteObservationRepository, SatelliteObservationRepository>();
+builder.Services.AddScoped<IGroundStationRepository, GroundStationRepository>();
 
 var app = builder.Build();
 

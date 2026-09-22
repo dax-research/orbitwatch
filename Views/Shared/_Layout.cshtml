@@ -1,52 +1,120 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - OrbitWatch</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] — ORBITWATCH / SPACE OPERATIONS</title>
+
+    <!-- Google Fonts: Barlow Condensed (Display), Inter (Body), Space Mono (Metadata) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/OrbitWatch.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OrbitWatch</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Missions" asp-action="Index">Missions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+    <header class="ow-header">
+        <div class="ow-nav-bar">
+            <a asp-controller="Home" asp-action="Index" class="ow-brand">
+                <span class="ow-logo-mark"></span>
+                <span class="ow-brand-title">ORBITWATCH</span>
+            </a>
+
+            <button type="button" class="ow-nav-toggle" id="owNavToggle" aria-label="Toggle navigation">
+                MENU [≡]
+            </button>
+
+            <ul class="ow-nav-links" id="owNavLinks">
+                <li>
+                    <a asp-controller="Home" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Missions" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Missions" ? "active" : "")">
+                        Missions
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Satellites" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Satellites" ? "active" : "")">
+                        Satellites
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="TrajectoryRecords" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "TrajectoryRecords" ? "active" : "")">
+                        Trajectories
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Incidents" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Incidents" ? "active" : "")">
+                        Incidents
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="SatelliteObservations" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SatelliteObservations" ? "active" : "")">
+                        Observations
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="GroundStations" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "GroundStations" ? "active" : "")">
+                        Ground Stations
+                    </a>
+                </li>
+            </ul>
+
+            <div class="ow-header-meta">
+                <span class="ow-status-dot"></span>
+                <span id="owLiveUtc">UTC 00:00:00</span>
+                <span>• FLIGHT OPS</span>
+            </div>
+        </div>
+    </header>
+
+    <main role="main" class="ow-main-container">
+        <div class="ow-editorial-frame">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="ow-footer">
+        <div class="ow-footer-inner">
+            <div class="ow-footer-top">
+                <div>
+                    <div class="ow-footer-brand">ORBITWATCH</div>
+                    <p style="color: #999; font-size: 0.95rem; max-width: 480px; margin-bottom: 1.25rem;">
+                        Satellite Mission, Telemetry & Orbital Incident Operations Infrastructure. Real-time celestial trajectory tracking and deep-space cataloging.
+                    </p>
+                    <div class="ow-tag">SECTOR 04 // FLIGHT PROTOCOL // 2026 EDITION</div>
+                </div>
+
+                <div>
+                    <div class="ow-tag ow-tag--dark" style="color: #fff; margin-bottom: 1rem;">OPERATIONS</div>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li><a asp-controller="Missions" asp-action="Index" style="color: #aaa;">Mission Register</a></li>
+                        <li><a asp-controller="Satellites" asp-action="Index" style="color: #aaa;">Satellite Network</a></li>
+                        <li><a asp-controller="TrajectoryRecords" asp-action="Index" style="color: #aaa;">Telemetry Archive</a></li>
+                        <li><a asp-controller="Incidents" asp-action="Index" style="color: #aaa;">Incident Log</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="ow-tag ow-tag--dark" style="color: #fff; margin-bottom: 1rem;">SURVEILLANCE</div>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li><a asp-controller="SatelliteObservations" asp-action="Index" style="color: #aaa;">Observations</a></li>
+                        <li><a asp-controller="GroundStations" asp-action="Index" style="color: #aaa;">Ground Stations</a></li>
+                        <li><a asp-controller="Home" asp-action="Privacy" style="color: #aaa;">Privacy Protocol</a></li>
                     </ul>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - OrbitWatch - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="ow-footer-bottom">
+                <span>&copy; @DateTime.UtcNow.Year ORBITWATCH AEROSPACE CORP. ALL RIGHTS RESERVED.</span>
+                <span>STATUS: NOMINAL • UTC LIVE FEED SYNCED</span>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

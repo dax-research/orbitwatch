@@ -1,64 +1,71 @@
 @model OrbitWatch.Models.Mission
 
 @{
-    ViewData["Title"] = "Create Mission";
+    ViewData["Title"] = "Create Mission Entry";
 }
 
-<section class="mission-page">
-    <div class="mb-4">
-        <div class="mission-eyebrow mb-2">Mission register / New entry</div>
-        <h1 class="mission-title display-6 mb-2">Create mission</h1>
-        <p class="mission-subtitle mb-0">Capture the operational baseline for a new satellite mission.</p>
-    </div>
-
-    <div class="mission-panel p-3 p-md-4">
-        <form asp-action="Create" method="post" novalidate>
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            <div class="row g-4">
-                <div class="col-md-8">
-                    <label asp-for="Name" class="form-label mission-form-label"></label>
-                    <input asp-for="Name" class="form-control" placeholder="e.g. Aurora-1 constellation" />
-                    <span asp-validation-for="Name"></span>
-                </div>
-                <div class="col-md-4">
-                    <label asp-for="Agency" class="form-label mission-form-label"></label>
-                    <input asp-for="Agency" class="form-control" placeholder="Operating agency" />
-                    <span asp-validation-for="Agency"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="LaunchDate" class="form-label mission-form-label"></label>
-                    <input asp-for="LaunchDate" class="form-control" />
-                    <span asp-validation-for="LaunchDate"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="EndDate" class="form-label mission-form-label"></label>
-                    <input asp-for="EndDate" class="form-control" />
-                    <span asp-validation-for="EndDate"></span>
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="Status" class="form-label mission-form-label"></label>
-                    <select asp-for="Status" class="form-select">
-                        <option value="">Select operational status</option>
-                        <option>Planned</option>
-                        <option>Active</option>
-                        <option>Completed</option>
-                        <option>On Hold</option>
-                    </select>
-                    <span asp-validation-for="Status"></span>
-                </div>
-                <div class="col-12">
-                    <label asp-for="Description" class="form-label mission-form-label"></label>
-                    <textarea asp-for="Description" class="form-control" rows="5" placeholder="Mission objectives, scope, and operational notes..."></textarea>
-                    <span asp-validation-for="Description"></span>
-                </div>
-            </div>
-            <div class="d-flex flex-wrap gap-2 mt-4 pt-2">
-                <button type="submit" class="mission-button">Create mission</button>
-                <a asp-action="Index" class="mission-button mission-button--secondary text-decoration-none">Cancel</a>
-            </div>
-        </form>
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">MISSION CONTROL // INITIALIZE CAMPAIGN</div>
+        <h1 class="ow-page-title">Create Mission</h1>
+        <p class="ow-page-subtitle">Establish an operational baseline for orbital campaigns, deep space ventures, or constellation tracking.</p>
     </div>
 </section>
+
+<div class="ow-form-wrap">
+    <form asp-action="Create" method="post" novalidate>
+        <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+        <div class="ow-form-grid">
+            <div class="ow-field ow-field--wide">
+                <label asp-for="Name" class="ow-label">MISSION DESIGNATION / NAME</label>
+                <input asp-for="Name" class="ow-input" placeholder="e.g. Artemis III Lunar Survey" />
+                <span asp-validation-for="Name" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Agency" class="ow-label">OPERATING AGENCY</label>
+                <input asp-for="Agency" class="ow-input" placeholder="e.g. NASA, ESA, ISRO" />
+                <span asp-validation-for="Agency" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Status" class="ow-label">OPERATIONAL STATUS</label>
+                <select asp-for="Status" class="ow-select">
+                    <option value="">-- Select Status --</option>
+                    <option>Planned</option>
+                    <option>Active</option>
+                    <option>Completed</option>
+                    <option>On Hold</option>
+                </select>
+                <span asp-validation-for="Status" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="LaunchDate" class="ow-label">LAUNCH DATE (UTC)</label>
+                <input asp-for="LaunchDate" class="ow-input" type="date" />
+                <span asp-validation-for="LaunchDate" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="EndDate" class="ow-label">CONCLUSION / END DATE (OPTIONAL)</label>
+                <input asp-for="EndDate" class="ow-input" type="date" />
+                <span asp-validation-for="EndDate" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field ow-field--wide">
+                <label asp-for="Description" class="ow-label">MISSION OBJECTIVES &amp; SCIENTIFIC SCOPE</label>
+                <textarea asp-for="Description" class="ow-textarea" placeholder="Detailed orbital objectives, target trajectories, payload manifests, and telemetry requirements..."></textarea>
+                <span asp-validation-for="Description" class="ow-field-error"></span>
+            </div>
+        </div>
+
+        <div class="ow-form-actions">
+            <button type="submit" class="ow-btn">Register Mission →</button>
+            <a asp-action="Index" class="ow-btn ow-btn--secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

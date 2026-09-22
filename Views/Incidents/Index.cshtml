@@ -1,48 +1,85 @@
 @model IEnumerable<OrbitWatch.Models.Incident>
 
 @{
-    ViewData["Title"] = "Incidents";
+    ViewData["Title"] = "Incident Log";
+    var openCount = Model.Count(i => i.Status.ToLowerInvariant() == "open" || i.Status.ToLowerInvariant() == "investigating");
+    var criticalCount = Model.Count(i => i.Severity.ToLowerInvariant() == "critical");
 }
 
-<h1>Incident Log</h1>
-
-<p><a asp-action="Create">+ Log Incident</a></p>
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow" style="color: var(--ow-red);">• ANOMALY SURVEILLANCE // FLIGHT LOG</div>
+        <h1 class="ow-page-title">Incident Log</h1>
+        <p class="ow-page-subtitle">Real-time registry of orbital anomalies, debris collision warnings, telemetry failures, and subsystem alerts.</p>
+    </div>
+    <div style="display: flex; gap: 1.5rem; align-items: flex-end;">
+        <div style="text-align: right;">
+            <div class="ow-tag" style="color: var(--ow-red);">ANOMALIES ACTIVE</div>
+            <div style="font-family: var(--font-display); font-size: 2.8rem; font-weight: 900; line-height: 0.9; color: var(--ow-red);">
+                @openCount.ToString("D2")
+            </div>
+        </div>
+        <a asp-action="Create" class="ow-btn ow-btn--danger">+ Log Incident</a>
+    </div>
+</section>
 
 @if (Model.Any())
 {
-    <table border="1" cellpadding="6" cellspacing="0">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Type</th>
-                <th>Satellite</th>
-                <th>Severity</th>
-                <th>Status</th>
-                <th>Occurred</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var incident in Model)
-            {
-                <tr>
-                    <td>@incident.Id</td>
-                    <td>@incident.Type</td>
-                    <td>@incident.Satellite?.Name</td>
-                    <td>@incident.Severity</td>
-                    <td>@incident.Status</td>
-                    <td>@incident.OccurredAt.ToString("dd MMM yyyy HH:mm")</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@incident.Id">Details</a> |
-                        <a asp-action="Edit"    asp-route-id="@incident.Id">Edit</a> |
-                        <a asp-action="Delete"  asp-route-id="@incident.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="ow-list">
+        @{ int index = 1; }
+        @foreach (var incident in Model.OrderByDescending(i => i.OccurredAt))
+        {
+            var isCritical = incident.Severity.ToLowerInvariant() == "critical";
+            var statusClass = isCritical ? "ow-status--critical" : "";
+
+            <div class="ow-list-row" style="@(isCritical ? "border-left: 4px solid var(--ow-red);" : "")">
+                <div class="ow-list-index">@index.ToString("D2")</div>
+
+                <div class="ow-list-body">
+                    <div class="ow-list-title" style="display: flex; align-items: center; gap: 0.75rem;">
+                        <a asp-action="Details" asp-route-id="@incident.Id">@incident.Type</a>
+                        @if (isCritical)
+                        {
+                            <span class="ow-status ow-status--critical">CRITICAL</span>
+                        }
+                        else
+                        {
+                            <span class="ow-tag">@incident.Severity</span>
+                        }
+                    </div>
+                    <div class="ow-list-meta">
+                        ASSET: @(incident.Satellite?.Name ?? "UNSPECIFIED SATELLITE") &nbsp;•&nbsp;
+                        OCCURRED: @incident.OccurredAt.ToString("dd MMM yyyy HH:mm:ss") UTC
+                    </div>
+                </div>
+
+                <div class="ow-list-aside">
+                    <div class="ow-list-detail" style="max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        @incident.Description
+                    </div>
+                    <div class="ow-list-meta">STATUS: @incident.Status.ToUpper()</div>
+                </div>
+
+                <div class="ow-list-status">
+                    <span class="ow-status @statusClass">@incident.Status</span>
+                </div>
+
+                <div class="ow-list-actions">
+                    <a asp-action="Details" asp-route-id="@incident.Id" class="ow-action">Details</a>
+                    <a asp-action="Edit" asp-route-id="@incident.Id" class="ow-action">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@incident.Id" class="ow-action ow-action--danger">Delete</a>
+                </div>
+            </div>
+            index++;
+        }
+    </div>
 }
 else
 {
-    <p>No incidents recorded.</p>
+    <div class="ow-empty">
+        <div class="ow-eyebrow" style="justify-content: center;">INCIDENT ARCHIVE CLEAR</div>
+        <h2 style="font-size: 2.2rem; margin: 1rem 0;">All orbital constellations nominal.</h2>
+        <p style="color: #666; margin-bottom: 2rem;">No telemetry hazards or anomalies recorded.</p>
+        <a asp-action="Create" class="ow-btn ow-btn--secondary">+ Record Anomaly Incident</a>
+    </div>
 }

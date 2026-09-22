@@ -1,0 +1,51 @@
+@model OrbitWatch.Models.GroundStation
+
+@{
+    ViewData["Title"] = $"{Model.Name} — Ground Station Dossier";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">TERRESTRIAL DOWNLINK // STATION RECORD #@Model.Id</div>
+        <h1 class="ow-page-title">@Model.Name</h1>
+        <p class="ow-page-subtitle">
+            LOCATION: @Model.Location &nbsp;•&nbsp;
+            COUNTRY: @Model.Country
+        </p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="ow-btn">Edit Station</a>
+        <a asp-action="Index" class="ow-btn ow-btn--secondary">← Return to Directory</a>
+    </div>
+</section>
+
+<div class="ow-details-grid">
+    <div class="ow-panel">
+        <div class="ow-eyebrow">OPERATING SPECIFICATION</div>
+        <dl class="ow-dl">
+            <dt>Station Name</dt>
+            <dd>@Model.Name</dd>
+            <dt>Geographic Location</dt>
+            <dd>@Model.Location</dd>
+            <dt>Sovereign Host</dt>
+            <dd>@Model.Country</dd>
+            <dt>Operating Authority</dt>
+            <dd>@(Model.Operator ?? "Not specified")</dd>
+            <dt>Network Status</dt>
+            <dd><span class="ow-status ow-status--active">@(Model.Status ?? "Operational")</span></dd>
+        </dl>
+    </div>
+
+    <div class="ow-panel">
+        <div class="ow-eyebrow">TELEMETRY &amp; PASS TRACKING CAPABILITY</div>
+        <p style="font-size: 1.05rem; line-height: 1.7; color: #333; margin-bottom: 2rem;">
+            Primary S-band, X-band, and Ka-band downlinks. Synchronized with OrbitWatch ephemeris engine for continuous constellation pass prediction and automated dish steering.
+        </p>
+        <div style="border-top: 1px solid var(--ow-border); padding-top: 1.5rem;">
+            <div class="ow-tag" style="margin-bottom: 0.5rem;">DOWNLINK INTEGRATION</div>
+            <a asp-controller="SatelliteObservations" asp-action="Index" class="ow-btn ow-btn--secondary">
+                View Observations From This Station →
+            </a>
+        </div>
+    </div>
+</div>

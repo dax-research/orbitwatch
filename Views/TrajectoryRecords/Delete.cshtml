@@ -1,0 +1,39 @@
+@model OrbitWatch.Models.TrajectoryRecord
+
+@{
+    ViewData["Title"] = $"Purge Vector #{Model.Id} — Telemetry Archive";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow" style="color: var(--ow-red);">EPHEMERIS LOGGING // PURGE RECORD</div>
+        <h1 class="ow-page-title">Delete Trajectory Record?</h1>
+        <p class="ow-page-subtitle">Confirm permanent deletion of Vector #@Model.Id from the telemetry database.</p>
+    </div>
+</section>
+
+<div class="ow-form-wrap">
+    <div class="ow-warning-box">
+        <strong>PURGING TELEMETRY ENTRY:</strong><br />
+        This action permanently expunges this coordinate vector and velocity observation. Downlink cannot be recovered.
+    </div>
+
+    <dl class="ow-dl" style="margin-bottom: 2.5rem;">
+        <dt>Satellite Asset</dt>
+        <dd>@(Model.Satellite?.Name ?? "Unassigned")</dd>
+        <dt>Coordinates</dt>
+        <dd>@Model.Latitude.ToString("F4")°, @Model.Longitude.ToString("F4")°</dd>
+        <dt>Altitude</dt>
+        <dd>@Model.Altitude.ToString("N1") km</dd>
+        <dt>Velocity</dt>
+        <dd>@Model.Velocity.ToString("F2") km/s</dd>
+        <dt>Timestamp</dt>
+        <dd>@Model.RecordedAt.ToString("dd MMMM yyyy HH:mm:ss") UTC</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post" class="ow-form-actions">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="ow-btn ow-btn--danger">Execute Purge</button>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Abort &amp; Return</a>
+    </form>
+</div>

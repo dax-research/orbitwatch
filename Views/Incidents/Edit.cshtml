@@ -1,68 +1,78 @@
 @model OrbitWatch.Models.Incident
 
 @{
-    ViewData["Title"] = "Edit Incident";
+    ViewData["Title"] = $"Update Incident #{Model.Id} — Flight Operations";
 }
 
-<h1>Edit Incident</h1>
-
-<form asp-action="Edit" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
-
+<section class="ow-page-header">
     <div>
-        <label asp-for="SatelliteId"></label>
-        <select asp-for="SatelliteId" asp-items="ViewBag.SatelliteId">
-            <option value="">-- Select Satellite --</option>
-        </select>
-        <span asp-validation-for="SatelliteId" class="text-danger"></span>
+        <div class="ow-eyebrow" style="color: var(--ow-red);">ANOMALY SURVEILLANCE // MODIFY DOSSIER</div>
+        <h1 class="ow-page-title">Edit Incident</h1>
+        <p class="ow-page-subtitle">Update resolution status, investigation notes, and severity classification for Incident #@Model.Id.</p>
     </div>
+</section>
 
-    <div>
-        <label asp-for="Type"></label>
-        <input asp-for="Type" />
-        <span asp-validation-for="Type" class="text-danger"></span>
-    </div>
+<div class="ow-form-wrap">
+    <form asp-action="Edit" method="post" novalidate>
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="All" class="text-danger mb-4"></div>
 
-    <div>
-        <label asp-for="Severity"></label>
-        <select asp-for="Severity">
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-            <option>Critical</option>
-        </select>
-        <span asp-validation-for="Severity" class="text-danger"></span>
-    </div>
+        <div class="ow-form-grid">
+            <div class="ow-field ow-field--wide">
+                <label asp-for="SatelliteId" class="ow-label">IMPACTED SATELLITE ASSET</label>
+                <select asp-for="SatelliteId" asp-items="ViewBag.SatelliteId" class="ow-select">
+                    <option value="">-- Select Target Satellite --</option>
+                </select>
+                <span asp-validation-for="SatelliteId" class="ow-field-error"></span>
+            </div>
 
-    <div>
-        <label asp-for="Status"></label>
-        <select asp-for="Status">
-            <option>Open</option>
-            <option>Investigating</option>
-            <option>Resolved</option>
-            <option>Closed</option>
-        </select>
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
+            <div class="ow-field ow-field--wide">
+                <label asp-for="Type" class="ow-label">ANOMALY TYPE / DESIGNATION</label>
+                <input asp-for="Type" class="ow-input" />
+                <span asp-validation-for="Type" class="ow-field-error"></span>
+            </div>
 
-    <div>
-        <label asp-for="OccurredAt"></label>
-        <input asp-for="OccurredAt" />
-        <span asp-validation-for="OccurredAt" class="text-danger"></span>
-    </div>
+            <div class="ow-field">
+                <label asp-for="Severity" class="ow-label">SEVERITY CLASSIFICATION</label>
+                <select asp-for="Severity" class="ow-select">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                    <option>Critical</option>
+                </select>
+                <span asp-validation-for="Severity" class="ow-field-error"></span>
+            </div>
 
-    <div>
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" rows="4"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+            <div class="ow-field">
+                <label asp-for="Status" class="ow-label">RESOLUTION STATUS</label>
+                <select asp-for="Status" class="ow-select">
+                    <option>Open</option>
+                    <option>Investigating</option>
+                    <option>Resolved</option>
+                    <option>Closed</option>
+                </select>
+                <span asp-validation-for="Status" class="ow-field-error"></span>
+            </div>
 
-    <div>
-        <button type="submit">Save Changes</button>
-        <a asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
-    </div>
-</form>
+            <div class="ow-field ow-field--wide">
+                <label asp-for="OccurredAt" class="ow-label">TIMESTAMP OF OCCURRENCE (UTC)</label>
+                <input asp-for="OccurredAt" class="ow-input" type="datetime-local" />
+                <span asp-validation-for="OccurredAt" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field ow-field--wide">
+                <label asp-for="Description" class="ow-label">INCIDENT NARRATIVE &amp; TELEMETRY IMPACT</label>
+                <textarea asp-for="Description" class="ow-textarea"></textarea>
+                <span asp-validation-for="Description" class="ow-field-error"></span>
+            </div>
+        </div>
+
+        <div class="ow-form-actions">
+            <button type="submit" class="ow-btn">Save Anomaly Update →</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

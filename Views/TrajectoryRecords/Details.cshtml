@@ -1,0 +1,71 @@
+@model OrbitWatch.Models.TrajectoryRecord
+
+@{
+    ViewData["Title"] = $"Vector #{Model.Id} — Telemetry Details";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">TELEMETRY VECTOR // ARCHIVE #@Model.Id</div>
+        <h1 class="ow-page-title">Trajectory Record</h1>
+        <p class="ow-page-subtitle">
+            ASSET: @(Model.Satellite?.Name ?? "Unassigned") &nbsp;•&nbsp;
+            RECORDED: @Model.RecordedAt.ToString("dd MMMM yyyy HH:mm:ss") UTC
+        </p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="ow-btn">Edit Vector</a>
+        <a asp-action="Index" class="ow-btn ow-btn--secondary">← Return to Archive</a>
+    </div>
+</section>
+
+<div class="ow-details-grid">
+    <div class="ow-panel">
+        <div class="ow-eyebrow">COORDINATE EPHEMERIS</div>
+        <dl class="ow-dl">
+            <dt>Target Satellite</dt>
+            <dd>
+                @if (Model.Satellite != null)
+                {
+                    <a asp-controller="Satellites" asp-action="Details" asp-route-id="@Model.Satellite.Id" class="ow-action">
+                        @Model.Satellite.Name (NORAD @Model.Satellite.NoradId)
+                    </a>
+                }
+                else
+                {
+                    <span>Unassigned</span>
+                }
+            </dd>
+            <dt>Latitude</dt>
+            <dd style="font-family: var(--font-mono); font-size: 1.1rem;">@Model.Latitude.ToString("F6")°</dd>
+            <dt>Longitude</dt>
+            <dd style="font-family: var(--font-mono); font-size: 1.1rem;">@Model.Longitude.ToString("F6")°</dd>
+            <dt>Recorded Time</dt>
+            <dd>@Model.RecordedAt.ToString("dd MMMM yyyy HH:mm:ss") UTC</dd>
+        </dl>
+    </div>
+
+    <div class="ow-panel">
+        <div class="ow-eyebrow">ORBITAL KINEMATICS</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <div class="ow-tag">ALTITUDE</div>
+                <div style="font-family: var(--font-display); font-size: 3.5rem; font-weight: 900; line-height: 1;">
+                    @Model.Altitude.ToString("N1")
+                </div>
+                <div class="ow-caption">KILOMETERS ABOVE ELLIPSOID</div>
+            </div>
+            <div>
+                <div class="ow-tag">VELOCITY</div>
+                <div style="font-family: var(--font-display); font-size: 3.5rem; font-weight: 900; line-height: 1;">
+                    @Model.Velocity.ToString("F2")
+                </div>
+                <div class="ow-caption">KM/S ORBITAL SPEED</div>
+            </div>
+        </div>
+        <div style="border-top: 1px solid var(--ow-border); padding-top: 1.5rem;">
+            <div class="ow-tag" style="margin-bottom: 0.5rem;">ORBIT DESIGNATION</div>
+            <span class="ow-status" style="font-size: 1rem; padding: 0.4rem 1rem;">@Model.OrbitType</span>
+        </div>
+    </div>
+</div>

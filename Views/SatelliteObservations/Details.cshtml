@@ -1,0 +1,74 @@
+@model OrbitWatch.Models.SatelliteObservation
+
+@{
+    ViewData["Title"] = $"{Model.ObservationType} Observation #{Model.Id} — Telemetry Archive";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">OBSERVATIONAL SENSOR LOG // ENTRY #@Model.Id</div>
+        <h1 class="ow-page-title">@Model.ObservationType Observation</h1>
+        <p class="ow-page-subtitle">
+            STATION: @Model.GroundStation &nbsp;•&nbsp;
+            OBSERVED: @Model.ObservedAt.ToString("dd MMMM yyyy HH:mm:ss") UTC
+        </p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="ow-btn">Edit Observation</a>
+        <a asp-action="Index" class="ow-btn ow-btn--secondary">← Return to Archive</a>
+    </div>
+</section>
+
+<div class="ow-details-grid">
+    <div class="ow-panel">
+        <div class="ow-eyebrow">SENSOR OBSERVATION PARAMETERS</div>
+        <dl class="ow-dl">
+            <dt>Target Satellite</dt>
+            <dd>
+                @if (Model.Satellite != null)
+                {
+                    <a asp-controller="Satellites" asp-action="Details" asp-route-id="@Model.Satellite.Id" class="ow-action">
+                        @Model.Satellite.Name (NORAD @Model.Satellite.NoradId)
+                    </a>
+                }
+                else
+                {
+                    <span>Unassigned</span>
+                }
+            </dd>
+            <dt>Observation Type</dt>
+            <dd><span class="ow-status">@Model.ObservationType</span></dd>
+            <dt>Ground Station</dt>
+            <dd>@Model.GroundStation</dd>
+            <dt>Observed Time</dt>
+            <dd>@Model.ObservedAt.ToString("dd MMMM yyyy HH:mm:ss") UTC</dd>
+        </dl>
+    </div>
+
+    <div class="ow-panel">
+        <div class="ow-eyebrow">RF &amp; THERMAL TELEMETRY READINGS</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <div class="ow-tag">SIGNAL STRENGTH</div>
+                <div style="font-family: var(--font-display); font-size: 3.5rem; font-weight: 900; line-height: 1;">
+                    @(Model.SignalStrength.HasValue ? Model.SignalStrength.Value.ToString("F1") : "—")
+                </div>
+                <div class="ow-caption">DECIBEL-MILLIWATTS (dBm)</div>
+            </div>
+            <div>
+                <div class="ow-tag">TEMPERATURE</div>
+                <div style="font-family: var(--font-display); font-size: 3.5rem; font-weight: 900; line-height: 1;">
+                    @(Model.Temperature.HasValue ? Model.Temperature.Value.ToString("F1") : "—")
+                </div>
+                <div class="ow-caption">CELSIUS SENSOR READING</div>
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--ow-border); padding-top: 1.5rem;">
+            <div class="ow-tag" style="margin-bottom: 0.5rem;">SCIENTIFIC NOTES</div>
+            <p style="font-size: 0.95rem; color: #444; line-height: 1.6;">
+                @(string.IsNullOrWhiteSpace(Model.Description) ? "No additional narrative notes provided." : Model.Description)
+            </p>
+        </div>
+    </div>
+</div>

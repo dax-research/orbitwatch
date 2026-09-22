@@ -1,0 +1,66 @@
+@model OrbitWatch.Models.GroundStation
+
+@{
+    ViewData["Title"] = $"Edit {Model.Name} — Ground Station";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">TERRESTRIAL DOWNLINK // STATION RECALIBRATION</div>
+        <h1 class="ow-page-title">Edit Ground Station</h1>
+        <p class="ow-page-subtitle">Update operating authority, station status, or site coordinates for <strong>@Model.Name</strong>.</p>
+    </div>
+</section>
+
+<div class="ow-form-wrap">
+    <form asp-action="Edit" method="post" novalidate>
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+        <div class="ow-form-grid">
+            <div class="ow-field ow-field--wide">
+                <label asp-for="Name" class="ow-label">FACILITY / STATION DESIGNATION</label>
+                <input asp-for="Name" class="ow-input" />
+                <span asp-validation-for="Name" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Location" class="ow-label">GEOGRAPHIC COORDINATES / SITE</label>
+                <input asp-for="Location" class="ow-input" />
+                <span asp-validation-for="Location" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Country" class="ow-label">HOST NATION / TERRITORY</label>
+                <input asp-for="Country" class="ow-input" />
+                <span asp-validation-for="Country" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Operator" class="ow-label">OPERATING ENTITY / AGENCY</label>
+                <input asp-for="Operator" class="ow-input" />
+                <span asp-validation-for="Operator" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Status" class="ow-label">OPERATIONAL READINESS</label>
+                <select asp-for="Status" class="ow-select">
+                    <option>Operational</option>
+                    <option>Maintenance</option>
+                    <option>Offline</option>
+                    <option>Decommissioned</option>
+                </select>
+                <span asp-validation-for="Status" class="ow-field-error"></span>
+            </div>
+        </div>
+
+        <div class="ow-form-actions">
+            <button type="submit" class="ow-btn">Save Station Parameters →</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

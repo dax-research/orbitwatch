@@ -1,8 +1,302 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Operations Center";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- ========================================================================
+     HERO SECTION — ASYMMETRIC EDITORIAL MAGAZINE HERO
+     ======================================================================== -->
+<section class="ow-hero-grid">
+    <div class="ow-hero-left">
+        <div>
+            <div class="ow-eyebrow">FLIGHT COMMAND // SPACE OPERATIONS 2026</div>
+            <h1 class="ow-display-giant" style="margin-bottom: 1rem;">
+                ORBIT<br />WATCH
+            </h1>
+            <div class="ow-caption" style="margin-bottom: 2.5rem; font-size: 0.85rem; color: #555;">
+                SATELLITE MISSION, TELEMETRY &amp; INCIDENT MANAGEMENT SYSTEM
+            </div>
+        </div>
+
+        <div>
+            <p class="ow-lead" style="margin-bottom: 2.5rem; max-width: 540px;">
+                Comprehensive celestial surveillance apparatus. Tracking synchronized constellations across Low Earth, Geostationary, and Deep-Space trajectories with continuous telemetry verification.
+            </p>
+            <div class="ow-form-actions" style="border: none; padding: 0;">
+                <a asp-controller="Missions" asp-action="Index" class="ow-btn">
+                    Access Mission Control →
+                </a>
+                <a asp-controller="Satellites" asp-action="Index" class="ow-btn ow-btn--secondary">
+                    Satellite Catalogue
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ow-hero-right">
+        <div class="ow-hero-img-wrap">
+            <span class="ow-hero-badge">• LIVE FEED — SENSOR ARRAY A-7</span>
+            <img src="~/images/hero-mars.jpg" alt="Orbital Space Imagery" class="ow-hero-img" />
+            <div class="ow-hero-caption">
+                <span>PHOTO — CELESTIAL OBSERVATION CORPS</span>
+                <span>SECTOR 04 // 42° 18' N, 71° 04' W</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================================================
+     OVERSIZED NUMERICAL STATISTICS (INSPIRATION: MASSIVE "98" STATISTIC)
+     ======================================================================== -->
+<section class="ow-stats-strip">
+    <div class="ow-stat-cell">
+        <div class="ow-tag">NETWORK STATUS</div>
+        <div class="ow-stat-number">24</div>
+        <div>
+            <div class="ow-stat-label">Tracked Satellites</div>
+            <div class="ow-stat-meta">Active In Orbit</div>
+        </div>
+    </div>
+
+    <div class="ow-stat-cell">
+        <div class="ow-tag">OPERATIONAL</div>
+        <div class="ow-stat-number">08</div>
+        <div>
+            <div class="ow-stat-label">Active Missions</div>
+            <div class="ow-stat-meta">Exploration Programs</div>
+        </div>
+    </div>
+
+    <div class="ow-stat-cell">
+        <div class="ow-tag" style="color: var(--ow-red);">CRITICAL ALERT</div>
+        <div class="ow-stat-number" style="color: var(--ow-red);">03</div>
+        <div>
+            <div class="ow-stat-label">Open Incidents</div>
+            <div class="ow-stat-meta">Under Active Review</div>
+        </div>
+    </div>
+
+    <div class="ow-stat-cell">
+        <div class="ow-tag">GLOBAL COVERAGE</div>
+        <div class="ow-stat-number">12</div>
+        <div>
+            <div class="ow-stat-label">Ground Stations</div>
+            <div class="ow-stat-meta">Receiving Telemetry</div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================================================
+     EDITORIAL QUOTE / MANIFESTO (REFERENCE INSPIRATION)
+     ======================================================================== -->
+<section class="ow-editorial-quote">
+    <div>
+        <div class="ow-caption" style="margin-bottom: 0.5rem;">• IN_ORBIT // 2026</div>
+        <div class="ow-tag ow-tag--dark">DISPATCH FROM MISSION CONTROL</div>
+        <p style="margin-top: 1rem; font-size: 0.88rem; color: #666; line-height: 1.6;">
+            Recorded during periapsis entry over polar terminator. All ground relays synchronized via optical downlink.
+        </p>
+    </div>
+
+    <div>
+        <span class="ow-quote-mark">“</span>
+        <div class="ow-quote-text">
+            THE TRAJECTORY OF ORBITAL ASSETS, BUT ALSO THE <span class="ow-accent-underline">IRIDESCENCE OF DEEP SPACE</span> SURVEILLANCE, THE WAY THAT SIGNALS POOL IN SENSORS THAT MAKE FLIGHT PROTOCOLS OPAQUE.
+        </div>
+        <div class="ow-caption" style="margin-top: 1.5rem;">
+            — ORBITAL ARCHIVE DIRECTIVE 09-B // FLIGHT LOG
+        </div>
+    </div>
+</section>
+
+<!-- ========================================================================
+     01 — MISSION OVERVIEW
+     ======================================================================== -->
+<section class="ow-section-block">
+    <div class="ow-section-header">
+        <div class="ow-section-number">01 — MISSION REGISTER</div>
+        <a asp-controller="Missions" asp-action="Index" class="ow-action">View All Missions →</a>
+    </div>
+
+    <div class="ow-section-split">
+        <div style="padding: clamp(2rem, 4vw, 4rem);">
+            <div class="ow-caption" style="margin-bottom: 1rem;">PROGRAM LIFECYCLE</div>
+            <h2 class="ow-display-2" style="margin-bottom: 1.5rem;">
+                STRATEGIC MISSIONS &amp; FLIGHT CAMPAIGNS
+            </h2>
+            <p class="ow-lead" style="margin-bottom: 2rem;">
+                Explore planned, active, and completed space missions from agencies across the globe including NASA, ESA, JAXA, and commercial operators.
+            </p>
+            <div class="ow-form-actions" style="border: none; padding: 0;">
+                <a asp-controller="Missions" asp-action="Create" class="ow-btn">
+                    + Register New Mission
+                </a>
+            </div>
+        </div>
+
+        <div style="padding: clamp(2rem, 4vw, 4rem); background-color: var(--ow-offwhite); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div class="ow-tag ow-tag--dark" style="margin-bottom: 1.5rem;">FEATURED ACTIVE CAMPAIGN</div>
+                <div style="font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">
+                    ARTEMIS III LUNAR SURVEY
+                </div>
+                <div class="ow-caption" style="margin-bottom: 1rem;">OPERATOR: NASA // TARGET: SOUTH POLE-AITKEN BASIN</div>
+                <p style="color: #444; font-size: 0.95rem; line-height: 1.6;">
+                    Permanent orbital presence, gateway station trajectory maintenance, and automated lunar sample recovery telemetry.
+                </p>
+            </div>
+            <div style="margin-top: 2rem; border-top: 1px solid var(--ow-border); padding-top: 1.25rem;">
+                <span class="ow-status ow-status--active">STATUS: NOMINAL</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================================================
+     02 — SATELLITE NETWORK
+     ======================================================================== -->
+<section class="ow-section-block">
+    <div class="ow-section-header">
+        <div class="ow-section-number">02 — SATELLITE NETWORK</div>
+        <a asp-controller="Satellites" asp-action="Index" class="ow-action">Explore Technical Catalogue →</a>
+    </div>
+
+    <div class="ow-card-grid">
+        <div class="ow-card-grid-item">
+            <div>
+                <div class="ow-tag" style="margin-bottom: 0.5rem;">ORBIT TYPE: LEO</div>
+                <h3 style="font-size: 1.8rem; margin-bottom: 0.75rem;">LOW EARTH ORBIT</h3>
+                <p style="color: #666; font-size: 0.92rem;">
+                    High-cadence imaging, earth observation, and atmospheric temperature sensing constellations between 160km and 2,000km altitude.
+                </p>
+            </div>
+            <div class="ow-caption">14 ASSETS LOGGED</div>
+        </div>
+
+        <div class="ow-card-grid-item">
+            <div>
+                <div class="ow-tag" style="margin-bottom: 0.5rem;">ORBIT TYPE: GEO</div>
+                <h3 style="font-size: 1.8rem; margin-bottom: 0.75rem;">GEOSTATIONARY</h3>
+                <p style="color: #666; font-size: 0.92rem;">
+                    Synchronous 35,786km equatorial orbit assets providing continuous meteorological and deep-space relay capabilities.
+                </p>
+            </div>
+            <div class="ow-caption">06 ASSETS LOGGED</div>
+        </div>
+
+        <div class="ow-card-grid-item">
+            <div>
+                <div class="ow-tag" style="margin-bottom: 0.5rem;">ORBIT TYPE: HEO / SSO</div>
+                <h3 style="font-size: 1.8rem; margin-bottom: 0.75rem;">SPECIALIZED ORBITS</h3>
+                <p style="color: #666; font-size: 0.92rem;">
+                    Sun-synchronous and highly elliptical Molniya orbits providing high-latitude observational persistence.
+                </p>
+            </div>
+            <div>
+                <a asp-controller="Satellites" asp-action="Create" class="ow-action">+ Register Satellite</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================================================
+     03 — INCIDENT MONITOR & TELEMETRY
+     ======================================================================== -->
+<section class="ow-section-block">
+    <div class="ow-section-header">
+        <div class="ow-section-number">03 — INCIDENT MONITOR &amp; LOG</div>
+        <a asp-controller="Incidents" asp-action="Index" class="ow-action">View Incident Log →</a>
+    </div>
+
+    <div class="ow-section-split">
+        <div style="padding: clamp(2rem, 4vw, 4rem);">
+            <div class="ow-caption" style="margin-bottom: 1rem; color: var(--ow-red);">• ANOMALY MONITORING</div>
+            <h2 class="ow-display-2" style="margin-bottom: 1.5rem;">
+                REAL-TIME ANOMALIES &amp; FLIGHT HAZARDS
+            </h2>
+            <p class="ow-lead" style="margin-bottom: 2rem;">
+                Logging telemetry divergence, orbital decay alerts, micro-meteoroid collisions, and communications transponder loss across all constellations.
+            </p>
+            <a asp-controller="Incidents" asp-action="Create" class="ow-btn ow-btn--danger">
+                + Log Anomaly Incident
+            </a>
+        </div>
+
+        <div style="padding: clamp(2rem, 4vw, 4rem); background-color: var(--ow-offwhite); border-left: 1px solid var(--ow-border);">
+            <div class="ow-tag" style="color: var(--ow-red); margin-bottom: 1.25rem;">INCIDENT ESCALATION PROTOCOL</div>
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <div style="border-bottom: 1px solid var(--ow-border); padding-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="font-family: var(--font-display); font-size: 1.25rem;">CRITICAL SEVERITY</strong>
+                        <span class="ow-status ow-status--critical">ELEVATED</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #555; margin-top: 0.25rem;">Immediate trajectory deflection or contingency orientation required.</p>
+                </div>
+
+                <div style="border-bottom: 1px solid var(--ow-border); padding-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="font-family: var(--font-display); font-size: 1.25rem;">MEDIUM SEVERITY</strong>
+                        <span class="ow-status">MONITORED</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #555; margin-top: 0.25rem;">Telemetry variance observed by ground stations. Diagnostic ongoing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================================================
+     04 & 05 — TELEMETRY ARCHIVE & GLOBAL DIRECTORY NAVIGATION
+     ======================================================================== -->
+<section class="ow-section-block">
+    <div class="ow-section-header">
+        <div class="ow-section-number">04 &amp; 05 — TELEMETRY &amp; SURVEILLANCE DIRECTORY</div>
+        <div class="ow-caption">EXPLORE SYSTEM DIRECTORIES</div>
+    </div>
+
+    <div class="ow-card-grid">
+        <div class="ow-card-grid-item">
+            <div>
+                <div class="ow-section-number" style="margin-bottom: 1rem;">04 // TELEMETRY</div>
+                <h3 style="font-size: 1.9rem; margin-bottom: 0.75rem;">TRAJECTORY ARCHIVE</h3>
+                <p style="color: #666; font-size: 0.95rem; line-height: 1.6;">
+                    Precise coordinates, orbital velocity vectors, altitude parameters, and perigee/apogee timestamps.
+                </p>
+            </div>
+            <div style="margin-top: 2rem;">
+                <a asp-controller="TrajectoryRecords" asp-action="Index" class="ow-btn ow-btn--secondary" style="width: 100%;">
+                    Access Telemetry →
+                </a>
+            </div>
+        </div>
+
+        <div class="ow-card-grid-item">
+            <div>
+                <div class="ow-section-number" style="margin-bottom: 1rem;">05 // OBSERVATIONS</div>
+                <h3 style="font-size: 1.9rem; margin-bottom: 0.75rem;">SATELLITE OBSERVATIONS</h3>
+                <p style="color: #666; font-size: 0.95rem; line-height: 1.6;">
+                    Optical, radar, thermal, and signal strength readings recorded by verified celestial ground sensors.
+                </p>
+            </div>
+            <div style="margin-top: 2rem;">
+                <a asp-controller="SatelliteObservations" asp-action="Index" class="ow-btn ow-btn--secondary" style="width: 100%;">
+                    View Observations →
+                </a>
+            </div>
+        </div>
+
+        <div class="ow-card-grid-item">
+            <div>
+                <div class="ow-section-number" style="margin-bottom: 1rem;">06 // GROUND NETWORK</div>
+                <h3 style="font-size: 1.9rem; margin-bottom: 0.75rem;">GROUND STATIONS</h3>
+                <p style="color: #666; font-size: 0.95rem; line-height: 1.6;">
+                    Global network of radar dishes and telemetry downlink facilities across Svalbard, Goldstone, and Madrid.
+                </p>
+            </div>
+            <div style="margin-top: 2rem;">
+                <a asp-controller="GroundStations" asp-action="Index" class="ow-btn ow-btn--secondary" style="width: 100%;">
+                    Open Directory →
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

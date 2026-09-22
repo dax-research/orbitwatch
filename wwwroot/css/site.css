@@ -1,84 +1,1108 @@
+/* ==========================================================================
+   ORBITWATCH — BRUTALIST / EDITORIAL SPACE OPERATIONS DESIGN SYSTEM
+   Visual Direction: Black & White Editorial, High-contrast, Hairline Grids
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* --------------------------------------------------------------------------
+   1. RESET & DESIGN TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+    --ow-black: #0A0A0A;
+    --ow-white: #FFFFFF;
+    --ow-offwhite: #F3F3EF;
+    --ow-offwhite-alt: #EAEAE4;
+    --ow-muted: #777777;
+    --ow-muted-light: #999999;
+    --ow-border: #CFCFC8;
+    --ow-border-dark: #0A0A0A;
+    --ow-border-hairline: rgba(10, 10, 10, 0.14);
+    --ow-red: #D92626;
+    --ow-red-muted: rgba(217, 38, 38, 0.08);
+
+    --font-display: 'Barlow Condensed', -apple-system, sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'Space Mono', monospace;
+
+    --transition-fast: 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+    --transition-smooth: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    font-size: 15px;
+    background-color: var(--ow-offwhite);
+    color: var(--ow-black);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: var(--font-sans);
+    background-color: var(--ow-offwhite);
+    color: var(--ow-black);
+    line-height: 1.55;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity var(--transition-fast), color var(--transition-fast);
 }
 
-/* Mission CRUD: mission-control visual layer */
-.mission-page {
-  color: #e8efff;
-  background: radial-gradient(circle at 0% 0%, rgba(80, 113, 255, .2), transparent 32rem), linear-gradient(135deg, #07111f, #0c1c31 52%, #08101e);
-  border: 1px solid rgba(159, 185, 255, .16);
-  border-radius: 1.25rem;
-  box-shadow: 0 1.5rem 3.5rem rgba(1, 7, 20, .2);
-  padding: clamp(1.25rem, 3vw, 2.5rem);
+/* --------------------------------------------------------------------------
+   2. TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 0.95;
+    color: var(--ow-black);
 }
 
-.mission-eyebrow { color: #80d6ff; font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-.mission-title { color: #fff; font-weight: 700; letter-spacing: -.035em; }
-.mission-subtitle { color: #aec0dc; max-width: 44rem; }
-.mission-panel { background: rgba(13, 31, 55, .76); border: 1px solid rgba(170, 196, 255, .14); border-radius: 1rem; box-shadow: inset 0 1px rgba(255, 255, 255, .04); }
-.mission-table { --bs-table-bg: transparent; --bs-table-color: #e8efff; --bs-table-border-color: rgba(170, 196, 255, .12); margin-bottom: 0; }
-.mission-table thead th { border-bottom-width: 1px; color: #83a0c6; font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; white-space: nowrap; }
-.mission-table tbody tr { transition: background-color .2s ease; }
-.mission-table tbody tr:hover { background-color: rgba(122, 158, 255, .08); }
-.mission-table td { padding-block: 1rem; vertical-align: middle; }
-.mission-name { color: #fff; font-weight: 650; text-decoration: none; }
-.mission-name:hover { color: #80d6ff; }
-.mission-meta { color: #91a8c8; font-size: .84rem; }
-.mission-status { border-radius: 99px; display: inline-flex; font-size: .72rem; font-weight: 700; letter-spacing: .04em; padding: .35rem .65rem; text-transform: uppercase; }
-.mission-status--active { background: rgba(35, 202, 146, .15); color: #6df0be; }
-.mission-status--planned { background: rgba(105, 162, 255, .16); color: #91c4ff; }
-.mission-status--complete, .mission-status--completed { background: rgba(182, 145, 255, .16); color: #ceb4ff; }
-.mission-status--default { background: rgba(174, 192, 220, .13); color: #c6d3e9; }
-.mission-action { color: #a9caff; font-size: .84rem; font-weight: 600; text-decoration: none; }
-.mission-action:hover { color: #fff; }
-.mission-action--danger { color: #ff9dac; }
-.mission-action--danger:hover { color: #ffd3d9; }
-.mission-button { background: linear-gradient(135deg, #4f74ff, #39b6e8); border: 0; border-radius: .7rem; box-shadow: 0 .5rem 1.5rem rgba(57, 182, 232, .24); color: #fff; font-weight: 700; padding: .7rem 1rem; transition: transform .2s ease, box-shadow .2s ease; }
-.mission-button:hover { color: #fff; transform: translateY(-1px); box-shadow: 0 .75rem 1.75rem rgba(57, 182, 232, .32); }
-.mission-button--secondary { background: transparent; border: 1px solid rgba(170, 196, 255, .24); box-shadow: none; color: #d9e5fb; }
-.mission-button--secondary:hover { background: rgba(170, 196, 255, .1); }
-.mission-button--danger { background: linear-gradient(135deg, #d94c67, #f06e67); box-shadow: 0 .5rem 1.5rem rgba(217, 76, 103, .22); }
-.mission-form-label { color: #b6c8e5; font-size: .82rem; font-weight: 650; }
-.mission-page .form-control, .mission-page .form-select { background: rgba(4, 15, 30, .62); border-color: rgba(170, 196, 255, .18); border-radius: .65rem; color: #f4f7ff; padding: .72rem .82rem; }
-.mission-page .form-control:focus, .mission-page .form-select:focus { background: rgba(4, 15, 30, .82); border-color: #5bbdf1; box-shadow: 0 0 0 .2rem rgba(91, 189, 241, .14); color: #fff; }
-.mission-page .form-control::placeholder { color: #7188a8; }
-.mission-page .field-validation-error { color: #ffacb8; font-size: .8rem; }
-.mission-detail-label { color: #87a1c8; font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-.mission-detail-value { color: #fff; font-size: 1rem; }
-.mission-empty { border: 1px dashed rgba(170, 196, 255, .3); border-radius: 1rem; color: #aec0dc; padding: 3.25rem 1.25rem; text-align: center; }
-.mission-alert { background: rgba(35, 202, 146, .12); border: 1px solid rgba(35, 202, 146, .22); border-radius: .75rem; color: #a1f6d1; }
-.mission-warning { background: rgba(247, 173, 73, .12); border: 1px solid rgba(247, 173, 73, .28); border-radius: .8rem; color: #ffd89e; }
-.mission-satellite-card { background: rgba(4, 15, 30, .28); border: 1px solid rgba(170, 196, 255, .16); border-radius: .7rem; padding: 1rem; }
+.ow-display-giant {
+    font-size: clamp(4.5rem, 14vw, 13rem);
+    line-height: 0.82;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
 
-@media (max-width: 767.98px) {
-  .mission-page { border-radius: .9rem; padding: 1.15rem; }
-  .mission-table td, .mission-table th { white-space: nowrap; }
+.ow-display-1 {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 0.9;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.ow-display-2 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    line-height: 0.92;
+    font-weight: 700;
+}
+
+.ow-section-number {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ow-black);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ow-section-number::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--ow-red);
+}
+
+.ow-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ow-muted);
+}
+
+.ow-tag--dark {
+    color: var(--ow-black);
+    font-weight: 700;
+}
+
+.ow-lead {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: #2a2a2a;
+    font-weight: 400;
+}
+
+.ow-caption {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ow-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   3. GLOBAL EDITORIAL HEADER & NAVIGATION
+   -------------------------------------------------------------------------- */
+.ow-header {
+    background-color: var(--ow-offwhite);
+    border-bottom: 1px solid var(--ow-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+.ow-nav-bar {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    min-height: 62px;
+}
+
+.ow-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding-right: 2rem;
+    border-right: 1px solid var(--ow-border);
+}
+
+.ow-logo-mark {
+    width: 14px;
+    height: 14px;
+    background: var(--ow-black);
+    display: inline-block;
+    position: relative;
+}
+
+.ow-logo-mark::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 5px;
+    height: 5px;
+    background: var(--ow-red);
+}
+
+.ow-brand-title {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--ow-black);
+}
+
+.ow-nav-links {
+    display: flex;
+    align-items: stretch;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ow-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ow-black);
+    border-right: 1px solid var(--ow-border);
+    position: relative;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.ow-nav-link:hover {
+    background-color: var(--ow-black);
+    color: var(--ow-white);
+}
+
+.ow-nav-link.active {
+    background-color: var(--ow-black);
+    color: var(--ow-white);
+}
+
+.ow-nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--ow-red);
+}
+
+.ow-header-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding-left: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ow-muted);
+}
+
+.ow-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #0E9F6E;
+    display: inline-block;
+    animation: pulse 2.2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+/* Mobile Toggle */
+.ow-nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+/* --------------------------------------------------------------------------
+   4. LAYOUT CONTAINERS & FRAMES
+   -------------------------------------------------------------------------- */
+.ow-main-container {
+    max-width: 1540px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    flex: 1;
+}
+
+.ow-editorial-frame {
+    border-left: 1px solid var(--ow-border);
+    border-right: 1px solid var(--ow-border);
+    background-color: var(--ow-white);
+    min-height: calc(100vh - 120px);
+}
+
+.ow-grid-border-bottom {
+    border-bottom: 1px solid var(--ow-border);
+}
+
+.ow-grid-border-top {
+    border-top: 1px solid var(--ow-border);
+}
+
+/* --------------------------------------------------------------------------
+   5. EDITORIAL HERO (REFERENCE INSPIRATION)
+   -------------------------------------------------------------------------- */
+.ow-hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    border-bottom: 1px solid var(--ow-border);
+    background-color: var(--ow-white);
+}
+
+.ow-hero-left {
+    padding: clamp(2rem, 5vw, 5rem);
+    border-right: 1px solid var(--ow-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.ow-hero-right {
+    position: relative;
+    background-color: var(--ow-black);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.ow-hero-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+}
+
+.ow-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(115%) brightness(95%);
+    opacity: 0.92;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+}
+
+.ow-hero-img-wrap:hover .ow-hero-img {
+    transform: scale(1.02);
+    filter: grayscale(100%) contrast(125%) brightness(102%);
+}
+
+.ow-hero-badge {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background-color: var(--ow-white);
+    color: var(--ow-black);
+    padding: 0.35rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    border: 1px solid var(--ow-black);
+    z-index: 2;
+}
+
+.ow-hero-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(to top, rgba(10,10,10,0.92), transparent);
+    color: var(--ow-white);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   6. OVERSIZED EDITORIAL STATISTICS (INSPIRATION: MASSIVE "98")
+   -------------------------------------------------------------------------- */
+.ow-stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--ow-border);
+    background-color: var(--ow-white);
+}
+
+.ow-stat-cell {
+    padding: clamp(1.5rem, 3vw, 3rem);
+    border-right: 1px solid var(--ow-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background-color var(--transition-fast);
+}
+
+.ow-stat-cell:last-child {
+    border-right: none;
+}
+
+.ow-stat-cell:hover {
+    background-color: var(--ow-offwhite);
+}
+
+.ow-stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(3.8rem, 8vw, 7.5rem);
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--ow-black);
+    margin-bottom: 0.5rem;
+}
+
+.ow-stat-label {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ow-black);
+    margin-bottom: 0.25rem;
+}
+
+.ow-stat-meta {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--ow-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   7. EDITORIAL ARTICLE / MANIFESTO QUOTE BLOCK
+   -------------------------------------------------------------------------- */
+.ow-editorial-quote {
+    padding: clamp(2.5rem, 5vw, 4.5rem);
+    border-bottom: 1px solid var(--ow-border);
+    background-color: var(--ow-white);
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.ow-quote-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    position: relative;
+}
+
+.ow-quote-mark {
+    font-size: 3rem;
+    line-height: 0.5;
+    font-family: Georgia, serif;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--ow-black);
+}
+
+.ow-accent-underline {
+    position: relative;
+    display: inline-block;
+}
+
+.ow-accent-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--ow-red);
+}
+
+/* --------------------------------------------------------------------------
+   8. EDITORIAL ASYMMETRIC CONTENT SECTIONS
+   -------------------------------------------------------------------------- */
+.ow-section-block {
+    border-bottom: 1px solid var(--ow-border);
+    background-color: var(--ow-white);
+}
+
+.ow-section-header {
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--ow-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--ow-offwhite);
+}
+
+.ow-section-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin: 0;
+}
+
+.ow-section-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.ow-section-split > div:first-child {
+    border-right: 1px solid var(--ow-border);
+}
+
+.ow-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.ow-card-grid-item {
+    padding: 2rem;
+    border-right: 1px solid var(--ow-border);
+    border-bottom: 1px solid var(--ow-border);
+    background-color: var(--ow-white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 280px;
+    transition: background-color var(--transition-fast);
+}
+
+.ow-card-grid-item:hover {
+    background-color: var(--ow-offwhite);
+}
+
+/* --------------------------------------------------------------------------
+   9. EDITORIAL LISTS & TELEMETRY TABLES
+   -------------------------------------------------------------------------- */
+.ow-list {
+    border-top: 1px solid var(--ow-border);
+}
+
+.ow-list-row {
+    display: grid;
+    grid-template-columns: 70px 2fr 1.5fr 1fr 180px;
+    align-items: center;
+    padding: 1.35rem 2rem;
+    border-bottom: 1px solid var(--ow-border);
+    background-color: var(--ow-white);
+    transition: background-color var(--transition-fast), padding-left var(--transition-smooth);
+}
+
+.ow-list-row:hover {
+    background-color: var(--ow-offwhite);
+    padding-left: 2.25rem;
+}
+
+.ow-list-index {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ow-border);
+    transition: color var(--transition-fast);
+}
+
+.ow-list-row:hover .ow-list-index {
+    color: var(--ow-black);
+}
+
+.ow-list-title {
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.ow-list-meta {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ow-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.ow-list-detail {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ow-black);
+}
+
+.ow-list-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+/* Technical Telemetry Table */
+.ow-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--ow-border);
+}
+
+.ow-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--ow-white);
+    font-size: 0.92rem;
+    text-align: left;
+}
+
+.ow-table th {
+    background-color: var(--ow-offwhite);
+    padding: 1rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ow-black);
+    border-bottom: 1px solid var(--ow-border);
+    white-space: nowrap;
+}
+
+.ow-table td {
+    padding: 1.15rem 1.5rem;
+    border-bottom: 1px solid var(--ow-border-hairline);
+    color: var(--ow-black);
+    vertical-align: middle;
+}
+
+.ow-table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.ow-table tbody tr:hover {
+    background-color: var(--ow-offwhite);
+}
+
+/* --------------------------------------------------------------------------
+   10. FORMS & INPUTS (BRUTALIST EDITORIAL STYLE)
+   -------------------------------------------------------------------------- */
+.ow-form-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: clamp(2rem, 4vw, 4rem) 2rem;
+}
+
+.ow-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.ow-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ow-field--wide {
+    grid-column: 1 / -1;
+}
+
+.ow-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ow-black);
+}
+
+.ow-input,
+.ow-select,
+.ow-textarea {
+    width: 100%;
+    background-color: var(--ow-white);
+    border: 1px solid var(--ow-border);
+    border-bottom: 2px solid var(--ow-black);
+    padding: 0.85rem 1rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ow-black);
+    border-radius: 0;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.ow-input:focus,
+.ow-select:focus,
+.ow-textarea:focus {
+    outline: none;
+    border-color: var(--ow-black);
+    background-color: #FAFAFA;
+}
+
+.ow-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230A0A0A' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+
+.ow-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.ow-field-error {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ow-red);
+    margin-top: 0.25rem;
+}
+
+.ow-form-actions {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    border-top: 1px solid var(--ow-border);
+    padding-top: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   11. BUTTONS & ACTIONS
+   -------------------------------------------------------------------------- */
+.ow-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: var(--ow-black);
+    color: var(--ow-white);
+    border: 1px solid var(--ow-black);
+    padding: 0.95rem 1.85rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border-radius: 0;
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.ow-btn:hover {
+    background-color: #222222;
+    color: var(--ow-white);
+    transform: translateY(-1px);
+}
+
+.ow-btn--secondary {
+    background-color: transparent;
+    color: var(--ow-black);
+    border: 1px solid var(--ow-border-dark);
+}
+
+.ow-btn--secondary:hover {
+    background-color: var(--ow-black);
+    color: var(--ow-white);
+}
+
+.ow-btn--danger {
+    background-color: var(--ow-red);
+    border-color: var(--ow-red);
+    color: var(--ow-white);
+}
+
+.ow-btn--danger:hover {
+    background-color: #B81818;
+    color: var(--ow-white);
+}
+
+.ow-action {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ow-black);
+    border-bottom: 1px solid var(--ow-black);
+    padding-bottom: 2px;
+}
+
+.ow-action:hover {
+    color: var(--ow-muted);
+    border-color: var(--ow-muted);
+}
+
+.ow-action--danger {
+    color: var(--ow-red);
+    border-color: var(--ow-red);
+}
+
+.ow-action--danger:hover {
+    color: #8C1010;
+    border-color: #8C1010;
+}
+
+/* --------------------------------------------------------------------------
+   12. STATUS BADGES & SEVERITY TAGS
+   -------------------------------------------------------------------------- */
+.ow-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--ow-border-dark);
+    background-color: var(--ow-white);
+    color: var(--ow-black);
+}
+
+.ow-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background-color: var(--ow-black);
+}
+
+.ow-status--active::before {
+    background-color: #0E9F6E;
+}
+
+.ow-status--planned::before {
+    background-color: #3F83F8;
+}
+
+.ow-status--completed::before {
+    background-color: #777777;
+}
+
+.ow-status--critical {
+    border-color: var(--ow-red);
+    color: var(--ow-red);
+    background-color: var(--ow-red-muted);
+}
+
+.ow-status--critical::before {
+    background-color: var(--ow-red);
+}
+
+/* --------------------------------------------------------------------------
+   13. PAGE HEADERS & DETAILS SCREENS
+   -------------------------------------------------------------------------- */
+.ow-page-header {
+    padding: clamp(2rem, 4vw, 4rem) 2rem;
+    border-bottom: 1px solid var(--ow-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    background-color: var(--ow-white);
+    gap: 2rem;
+}
+
+.ow-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ow-muted);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ow-eyebrow::before {
+    content: '•';
+    color: var(--ow-red);
+    font-size: 1.1rem;
+}
+
+.ow-page-title {
+    font-size: clamp(2.5rem, 6vw, 4.8rem);
+    line-height: 0.92;
+    margin: 0 0 0.5rem 0;
+}
+
+.ow-page-subtitle {
+    font-size: 1.05rem;
+    color: var(--ow-muted);
+    max-width: 680px;
+    margin: 0;
+}
+
+/* Split Details Grid */
+.ow-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--ow-border);
+}
+
+.ow-panel {
+    padding: clamp(1.8rem, 3.5vw, 3.5rem);
+    border-right: 1px solid var(--ow-border);
+    border-bottom: 1px solid var(--ow-border);
+    background-color: var(--ow-white);
+}
+
+.ow-panel:nth-child(2n) {
+    border-right: none;
+}
+
+.ow-panel--full {
+    grid-column: 1 / -1;
+    border-right: none;
+}
+
+.ow-dl {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 1rem 1.5rem;
+    align-items: baseline;
+    font-size: 0.95rem;
+}
+
+.ow-dl dt {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ow-muted);
+}
+
+.ow-dl dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--ow-black);
+}
+
+.ow-warning-box {
+    border: 2px solid var(--ow-red);
+    background-color: var(--ow-red-muted);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--ow-black);
+    font-size: 0.95rem;
+}
+
+.ow-empty {
+    padding: 5rem 2rem;
+    text-align: center;
+    background-color: var(--ow-white);
+    border-bottom: 1px solid var(--ow-border);
+}
+
+/* --------------------------------------------------------------------------
+   14. FOOTER
+   -------------------------------------------------------------------------- */
+.ow-footer {
+    background-color: var(--ow-black);
+    color: var(--ow-white);
+    border-top: 1px solid var(--ow-border-dark);
+    margin-top: auto;
+}
+
+.ow-footer-inner {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 2rem;
+}
+
+.ow-footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.ow-footer-brand {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+}
+
+.ow-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: #888888;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   15. RESPONSIVE BREAKPOINTS
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+    .ow-hero-grid {
+        grid-template-columns: 1fr;
+    }
+    .ow-hero-left {
+        border-right: none;
+        border-bottom: 1px solid var(--ow-border);
+    }
+    .ow-stats-strip {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .ow-stat-cell:nth-child(2) {
+        border-right: none;
+    }
+    .ow-editorial-quote {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .ow-card-grid {
+        grid-template-columns: 1fr;
+    }
+    .ow-card-grid-item {
+        border-right: none;
+    }
+    .ow-details-grid {
+        grid-template-columns: 1fr;
+    }
+    .ow-panel {
+        border-right: none;
+    }
+    .ow-list-row {
+        grid-template-columns: 50px 1fr 1fr;
+        gap: 1rem;
+    }
+    .ow-list-aside {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .ow-nav-links, .ow-header-meta {
+        display: none;
+    }
+    .ow-nav-toggle {
+        display: block;
+    }
+    .ow-nav-links.is-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 62px;
+        left: 0;
+        right: 0;
+        background-color: var(--ow-white);
+        border-bottom: 2px solid var(--ow-black);
+        z-index: 1000;
+    }
+    .ow-nav-link {
+        padding: 1.15rem 1.5rem;
+        border-right: none;
+        border-bottom: 1px solid var(--ow-border);
+    }
+    .ow-stats-strip {
+        grid-template-columns: 1fr;
+    }
+    .ow-stat-cell {
+        border-right: none;
+    }
+    .ow-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .ow-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .ow-list-row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    .ow-footer-top {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .ow-footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
 }

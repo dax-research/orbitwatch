@@ -1,0 +1,81 @@
+@model OrbitWatch.Models.SatelliteObservation
+
+@{
+    ViewData["Title"] = $"Edit Observation #{Model.Id} — Ground Sensor Archive";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">GROUND SENSORS // MODIFY CALIBRATION</div>
+        <h1 class="ow-page-title">Edit Observation</h1>
+        <p class="ow-page-subtitle">Recalibrate observation telemetry, signal measurements, or station logs for Entry #@Model.Id.</p>
+    </div>
+</section>
+
+<div class="ow-form-wrap">
+    <form asp-action="Edit" method="post" novalidate>
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+        <div class="ow-form-grid">
+            <div class="ow-field ow-field--wide">
+                <label asp-for="SatelliteId" class="ow-label">OBSERVED SATELLITE ASSET</label>
+                <select asp-for="SatelliteId" asp-items="ViewBag.SatelliteId" class="ow-select">
+                    <option value="">-- Select Target Satellite --</option>
+                </select>
+                <span asp-validation-for="SatelliteId" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="ObservationType" class="ow-label">OBSERVATION TYPE</label>
+                <select asp-for="ObservationType" class="ow-select">
+                    <option>Optical</option>
+                    <option>Radar</option>
+                    <option>Telemetry</option>
+                    <option>Spectrometric</option>
+                    <option>Thermal</option>
+                </select>
+                <span asp-validation-for="ObservationType" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="GroundStation" class="ow-label">RECEIVING GROUND STATION</label>
+                <input asp-for="GroundStation" class="ow-input" />
+                <span asp-validation-for="GroundStation" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field ow-field--wide">
+                <label asp-for="ObservedAt" class="ow-label">OBSERVATION TIMESTAMP (UTC)</label>
+                <input asp-for="ObservedAt" class="ow-input" type="datetime-local" />
+                <span asp-validation-for="ObservedAt" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="SignalStrength" class="ow-label">SIGNAL STRENGTH (dBm)</label>
+                <input asp-for="SignalStrength" class="ow-input" type="number" step="any" />
+                <span asp-validation-for="SignalStrength" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Temperature" class="ow-label">SUBSYSTEM TEMPERATURE (°C)</label>
+                <input asp-for="Temperature" class="ow-input" type="number" step="any" />
+                <span asp-validation-for="Temperature" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field ow-field--wide">
+                <label asp-for="Description" class="ow-label">OBSERVATION NOTES &amp; SPECTRAL ANALYSIS</label>
+                <textarea asp-for="Description" class="ow-textarea"></textarea>
+                <span asp-validation-for="Description" class="ow-field-error"></span>
+            </div>
+        </div>
+
+        <div class="ow-form-actions">
+            <button type="submit" class="ow-btn">Save Calibrated Record →</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

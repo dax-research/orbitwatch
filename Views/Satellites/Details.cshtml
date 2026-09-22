@@ -1,164 +1,167 @@
 @model OrbitWatch.Models.Satellite
 
 @{
-    ViewData["Title"] = "Satellite Details";
+    ViewData["Title"] = $"{Model.Name} — Satellite Dossier";
     var statusClass = Model.Status.ToLowerInvariant() switch
     {
-        "active"         => "ow-status--active",
-        "inactive"       => "ow-status--inactive",
-        "decommissioned" => "ow-status--decommissioned",
-        _                => "ow-status--default"
+        "active" => "ow-status--active",
+        "decommissioned" => "ow-status--completed",
+        _ => ""
     };
 }
 
-<section class="ow-page">
-    <div class="ow-page-header">
-        <div>
-            <div class="ow-eyebrow">Satellite Network / Asset Record</div>
-            <h1 class="ow-page-title">@Model.Name</h1>
-            <p class="ow-page-subtitle">
-                NORAD&nbsp;@Model.NoradId
-                &nbsp;&middot;&nbsp;
-                @Model.OrbitType
-                &nbsp;&middot;&nbsp;
-                <span class="ow-status @statusClass">@Model.Status</span>
-            </p>
-        </div>
-        <div class="ow-action-group">
-            <a asp-action="Edit"  asp-route-id="@Model.Id" class="ow-btn">Edit</a>
-            <a asp-action="Index"                          class="ow-btn ow-btn--secondary">Back</a>
-        </div>
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">CELESTIAL ASSET DOSSIER // NORAD #@Model.NoradId</div>
+        <h1 class="ow-page-title">@Model.Name</h1>
+        <p class="ow-page-subtitle">
+            ORBIT: @Model.OrbitType &nbsp;•&nbsp;
+            OPERATOR: @Model.Operator (@Model.Country) &nbsp;•&nbsp;
+            <span class="ow-status @statusClass">@Model.Status</span>
+        </p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="ow-btn">Edit Asset</a>
+        <a asp-action="Index" class="ow-btn ow-btn--secondary">← Return to Catalogue</a>
+    </div>
+</section>
+
+<div class="ow-details-grid">
+    <div class="ow-panel">
+        <div class="ow-eyebrow">ASSET SPECIFICATION</div>
+        <dl class="ow-dl">
+            <dt>Spacecraft Name</dt>
+            <dd>@Model.Name</dd>
+            <dt>NORAD Catalog ID</dt>
+            <dd style="font-family: var(--font-mono); font-size: 1.1rem;">#@Model.NoradId</dd>
+            <dt>Sovereign Country</dt>
+            <dd>@Model.Country</dd>
+            <dt>Operating Entity</dt>
+            <dd>@Model.Operator</dd>
+            <dt>Orbit Class</dt>
+            <dd><span class="ow-status">@Model.OrbitType</span></dd>
+            <dt>Deployment Date</dt>
+            <dd>@Model.LaunchDate.ToString("dd MMMM yyyy")</dd>
+            <dt>Assigned Mission</dt>
+            <dd>
+                @if (Model.Mission != null)
+                {
+                    <a asp-controller="Missions" asp-action="Details" asp-route-id="@Model.Mission.Id" class="ow-action">
+                        @Model.Mission.Name
+                    </a>
+                }
+                else
+                {
+                    <span>Independent Asset</span>
+                }
+            </dd>
+        </dl>
     </div>
 
-    <div class="ow-details-grid">
-        <!-- Specs panel -->
-        <div class="ow-panel">
-            <div class="ow-eyebrow">Asset Specification</div>
-            <dl class="ow-dl">
-                <dt>Operator</dt>
-                <dd>@Model.Operator</dd>
-                <dt>Country</dt>
-                <dd>@Model.Country</dd>
-                <dt>Orbit Type</dt>
-                <dd>@Model.OrbitType</dd>
-                <dt>Launch Date</dt>
-                <dd>@Model.LaunchDate.ToString("dd MMMM yyyy")</dd>
-                <dt>Mission</dt>
-                <dd>
-                    @if (Model.Mission != null)
-                    {
-                        <a asp-controller="Missions" asp-action="Details" asp-route-id="@Model.Mission.Id" class="ow-link">@Model.Mission.Name</a>
-                    }
-                    else
-                    {
-                        <span>—</span>
-                    }
-                </dd>
-            </dl>
-        </div>
-
-        <!-- Trajectory records -->
-        <div class="ow-panel">
-            <div class="ow-eyebrow">Trajectory Records</div>
-            @if (Model.TrajectoryRecords.Any())
-            {
+    <div class="ow-panel">
+        <div class="ow-eyebrow">RECENT TELEMETRY VECTORS</div>
+        @if (Model.TrajectoryRecords.Any())
+        {
+            <div class="ow-table-wrap">
                 <table class="ow-table">
                     <thead>
                         <tr>
-                            <th>Recorded At</th>
-                            <th>Latitude</th>
-                            <th>Longitude</th>
-                            <th>Altitude (km)</th>
-                            <th>Velocity (km/s)</th>
+                            <th>Recorded (UTC)</th>
+                            <th>Coords</th>
+                            <th>Alt (km)</th>
+                            <th>Vel (km/s)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var tr in Model.TrajectoryRecords.OrderByDescending(t => t.RecordedAt).Take(5))
+                        @foreach (var tr in Model.TrajectoryRecords.OrderByDescending(t => t.RecordedAt).Take(4))
                         {
                             <tr>
-                                <td>@tr.RecordedAt.ToString("dd MMM yyyy HH:mm")</td>
-                                <td>@tr.Latitude.ToString("F4")</td>
-                                <td>@tr.Longitude.ToString("F4")</td>
-                                <td>@tr.Altitude.ToString("F1")</td>
-                                <td>@tr.Velocity.ToString("F2")</td>
+                                <td style="font-family: var(--font-mono); font-size: 0.78rem;">@tr.RecordedAt.ToString("dd MMM HH:mm")</td>
+                                <td style="font-family: var(--font-mono); font-size: 0.78rem;">@tr.Latitude.ToString("F2")°, @tr.Longitude.ToString("F2")°</td>
+                                <td style="font-family: var(--font-mono); font-weight: 700;">@tr.Altitude.ToString("N0")</td>
+                                <td style="font-family: var(--font-mono); font-weight: 700;">@tr.Velocity.ToString("F2")</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-                <div class="ow-panel-footer">
-                    <a asp-controller="TrajectoryRecords" asp-action="Index" class="ow-action">View all trajectory records →</a>
-                </div>
-            }
-            else
-            {
-                <p class="ow-empty-inline">No trajectory records logged.</p>
-            }
-        </div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <a asp-controller="TrajectoryRecords" asp-action="Index" class="ow-action">View Telemetry Archive →</a>
+            </div>
+        }
+        else
+        {
+            <p style="color: #777; font-size: 0.95rem; margin-bottom: 1.5rem;">No coordinate vectors logged for this asset.</p>
+            <a asp-controller="TrajectoryRecords" asp-action="Create" class="ow-action">+ Record Telemetry Vector</a>
+        }
+    </div>
 
-        <!-- Incidents -->
-        <div class="ow-panel">
-            <div class="ow-eyebrow">Incident Log</div>
-            @if (Model.Incidents.Any())
-            {
+    <div class="ow-panel">
+        <div class="ow-eyebrow" style="color: var(--ow-red);">ANOMALY INCIDENTS (@Model.Incidents.Count)</div>
+        @if (Model.Incidents.Any())
+        {
+            <div class="ow-table-wrap">
                 <table class="ow-table">
                     <thead>
                         <tr>
                             <th>Type</th>
                             <th>Severity</th>
-                            <th>Occurred</th>
+                            <th>Date</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var incident in Model.Incidents.OrderByDescending(i => i.OccurredAt).Take(5))
+                        @foreach (var inc in Model.Incidents.OrderByDescending(i => i.OccurredAt).Take(3))
                         {
+                            var isCrit = inc.Severity.ToLowerInvariant() == "critical";
                             <tr>
-                                <td>@incident.Type</td>
-                                <td>@incident.Severity</td>
-                                <td>@incident.OccurredAt.ToString("dd MMM yyyy")</td>
-                                <td>@incident.Status</td>
+                                <td><a asp-controller="Incidents" asp-action="Details" asp-route-id="@inc.Id"><strong>@inc.Type</strong></a></td>
+                                <td><span class="ow-status @(isCrit ? "ow-status--critical" : "")">@inc.Severity</span></td>
+                                <td style="font-family: var(--font-mono); font-size: 0.78rem;">@inc.OccurredAt.ToString("dd MMM yyyy")</td>
+                                <td>@inc.Status</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-            }
-            else
-            {
-                <p class="ow-empty-inline">No incidents recorded.</p>
-            }
-        </div>
+            </div>
+        }
+        else
+        {
+            <p style="color: #777; font-size: 0.95rem;">No flight anomalies on record for this satellite.</p>
+        }
+    </div>
 
-        <!-- Observations -->
-        <div class="ow-panel">
-            <div class="ow-eyebrow">Observations</div>
-            @if (Model.SatelliteObservations.Any())
-            {
+    <div class="ow-panel">
+        <div class="ow-eyebrow">GROUND OBSERVATIONS (@Model.SatelliteObservations.Count)</div>
+        @if (Model.SatelliteObservations.Any())
+        {
+            <div class="ow-table-wrap">
                 <table class="ow-table">
                     <thead>
                         <tr>
                             <th>Type</th>
-                            <th>Observed</th>
-                            <th>Signal (dBm)</th>
-                            <th>Temp (°C)</th>
+                            <th>Station</th>
+                            <th>Signal</th>
+                            <th>Temp</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var obs in Model.SatelliteObservations.OrderByDescending(o => o.ObservedAt).Take(5))
+                        @foreach (var obs in Model.SatelliteObservations.OrderByDescending(o => o.ObservedAt).Take(3))
                         {
                             <tr>
-                                <td>@obs.ObservationType</td>
-                                <td>@obs.ObservedAt.ToString("dd MMM yyyy")</td>
-                                <td>@(obs.SignalStrength?.ToString("F1") ?? "—")</td>
-                                <td>@(obs.Temperature?.ToString("F1") ?? "—")</td>
+                                <td><span class="ow-status">@obs.ObservationType</span></td>
+                                <td>@obs.GroundStation</td>
+                                <td style="font-family: var(--font-mono);">@(obs.SignalStrength.HasValue ? $"{obs.SignalStrength.Value:F1} dBm" : "—")</td>
+                                <td style="font-family: var(--font-mono);">@(obs.Temperature.HasValue ? $"{obs.Temperature.Value:F1} °C" : "—")</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-            }
-            else
-            {
-                <p class="ow-empty-inline">No observations recorded.</p>
-            }
-        </div>
+            </div>
+        }
+        else
+        {
+            <p style="color: #777; font-size: 0.95rem;">No ground station observations recorded.</p>
+        }
     </div>
-</section>
+</div>

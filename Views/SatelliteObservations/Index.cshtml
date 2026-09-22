@@ -1,0 +1,85 @@
+@model IEnumerable<OrbitWatch.Models.SatelliteObservation>
+
+@{
+    ViewData["Title"] = "Scientific Observations";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">GROUND SENSORS // SPECTRAL &amp; SIGNAL SURVEILLANCE</div>
+        <h1 class="ow-page-title">Observation Archive</h1>
+        <p class="ow-page-subtitle">Scientific observations, RF signal strength measurements, surface thermal imaging, and radar cross-section data.</p>
+    </div>
+    <div>
+        <a asp-action="Create" class="ow-btn">+ Log Scientific Observation</a>
+    </div>
+</section>
+
+@if (Model.Any())
+{
+    <div class="ow-table-wrap">
+        <table class="ow-table">
+            <thead>
+                <tr>
+                    <th># ID</th>
+                    <th>Observation Type</th>
+                    <th>Target Satellite</th>
+                    <th>Receiving Ground Station</th>
+                    <th>Timestamp (UTC)</th>
+                    <th>Signal (dBm)</th>
+                    <th>Temperature</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obs in Model.OrderByDescending(o => o.ObservedAt))
+                {
+                    <tr>
+                        <td style="font-family: var(--font-mono); font-weight: 700; color: #888;">@obs.Id.ToString("D4")</td>
+                        <td>
+                            <span class="ow-status" style="font-weight: 700;">@obs.ObservationType</span>
+                        </td>
+                        <td>
+                            <strong style="font-size: 1.05rem;">
+                                @if (obs.Satellite != null)
+                                {
+                                    <a asp-controller="Satellites" asp-action="Details" asp-route-id="@obs.Satellite.Id" class="ow-action">
+                                        @obs.Satellite.Name
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span>—</span>
+                                }
+                            </strong>
+                        </td>
+                        <td style="font-family: var(--font-sans); font-weight: 600;">@obs.GroundStation</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem;">
+                            @obs.ObservedAt.ToString("dd MMM yyyy HH:mm")
+                        </td>
+                        <td style="font-family: var(--font-mono); font-weight: 700;">
+                            @(obs.SignalStrength.HasValue ? $"{obs.SignalStrength.Value:F1} dBm" : "—")
+                        </td>
+                        <td style="font-family: var(--font-mono); font-weight: 700;">
+                            @(obs.Temperature.HasValue ? $"{obs.Temperature.Value:F1} °C" : "—")
+                        </td>
+                        <td style="text-align: right; white-space: nowrap;">
+                            <a asp-action="Details" asp-route-id="@obs.Id" class="ow-action" style="margin-right: 0.75rem;">Details</a>
+                            <a asp-action="Edit" asp-route-id="@obs.Id" class="ow-action" style="margin-right: 0.75rem;">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@obs.Id" class="ow-action ow-action--danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="ow-empty">
+        <div class="ow-eyebrow" style="justify-content: center;">NO SCIENTIFIC OBSERVATIONS RECORDED</div>
+        <h2 style="font-size: 2.2rem; margin: 1rem 0;">Observational sensor feed is idle.</h2>
+        <p style="color: #666; margin-bottom: 2rem;">Acquire optical, radar, or thermal readings from connected ground stations.</p>
+        <a asp-action="Create" class="ow-btn">+ Log First Observation</a>
+    </div>
+}

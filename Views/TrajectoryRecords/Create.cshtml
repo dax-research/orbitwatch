@@ -1,0 +1,81 @@
+@model OrbitWatch.Models.TrajectoryRecord
+
+@{
+    ViewData["Title"] = "Log Telemetry Vector";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">EPHEMERIS LOGGING // DOWNLINK INPUT</div>
+        <h1 class="ow-page-title">Log Trajectory Record</h1>
+        <p class="ow-page-subtitle">Inject satellite telemetry vectors, celestial coordinates, and velocity parameters into the archival network.</p>
+    </div>
+</section>
+
+<div class="ow-form-wrap">
+    <form asp-action="Create" method="post" novalidate>
+        <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+        <div class="ow-form-grid">
+            <div class="ow-field ow-field--wide">
+                <label asp-for="SatelliteId" class="ow-label">TARGET SATELLITE ASSET</label>
+                <select asp-for="SatelliteId" asp-items="ViewBag.SatelliteId" class="ow-select">
+                    <option value="">-- Select Target Satellite --</option>
+                </select>
+                <span asp-validation-for="SatelliteId" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field ow-field--wide">
+                <label asp-for="RecordedAt" class="ow-label">OBSERVATION TIMESTAMP (UTC)</label>
+                <input asp-for="RecordedAt" class="ow-input" type="datetime-local" />
+                <span asp-validation-for="RecordedAt" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Latitude" class="ow-label">GEODETIC LATITUDE (DECIMAL DEGREES)</label>
+                <input asp-for="Latitude" class="ow-input" type="number" step="any" placeholder="e.g. 28.5721" />
+                <span asp-validation-for="Latitude" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Longitude" class="ow-label">GEODETIC LONGITUDE (DECIMAL DEGREES)</label>
+                <input asp-for="Longitude" class="ow-input" type="number" step="any" placeholder="e.g. -80.6480" />
+                <span asp-validation-for="Longitude" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Altitude" class="ow-label">ORBITAL ALTITUDE (KM)</label>
+                <input asp-for="Altitude" class="ow-input" type="number" step="any" placeholder="e.g. 540.2" />
+                <span asp-validation-for="Altitude" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field">
+                <label asp-for="Velocity" class="ow-label">ORBITAL VELOCITY (KM/S)</label>
+                <input asp-for="Velocity" class="ow-input" type="number" step="any" placeholder="e.g. 7.59" />
+                <span asp-validation-for="Velocity" class="ow-field-error"></span>
+            </div>
+
+            <div class="ow-field ow-field--wide">
+                <label asp-for="OrbitType" class="ow-label">ORBIT CLASSIFICATION</label>
+                <select asp-for="OrbitType" class="ow-select">
+                    <option value="">-- Select Orbit Classification --</option>
+                    <option>LEO</option>
+                    <option>MEO</option>
+                    <option>GEO</option>
+                    <option>HEO</option>
+                    <option>SSO</option>
+                </select>
+                <span asp-validation-for="OrbitType" class="ow-field-error"></span>
+            </div>
+        </div>
+
+        <div class="ow-form-actions">
+            <button type="submit" class="ow-btn">Record Telemetry Vector →</button>
+            <a asp-action="Index" class="ow-btn ow-btn--secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

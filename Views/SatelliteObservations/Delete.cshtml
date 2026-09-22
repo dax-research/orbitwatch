@@ -1,0 +1,37 @@
+@model OrbitWatch.Models.SatelliteObservation
+
+@{
+    ViewData["Title"] = $"Purge Observation #{Model.Id} — Ground Sensor Archive";
+}
+
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow" style="color: var(--ow-red);">GROUND SENSORS // PURGE OBSERVATION</div>
+        <h1 class="ow-page-title">Delete Observation?</h1>
+        <p class="ow-page-subtitle">Confirm permanent deletion of Entry #@Model.Id from the ground sensor archive.</p>
+    </div>
+</section>
+
+<div class="ow-form-wrap">
+    <div class="ow-warning-box">
+        <strong>PURGING SENSOR DATA:</strong><br />
+        This action permanently removes this observational entry and its RF/thermal metrics from the historical record.
+    </div>
+
+    <dl class="ow-dl" style="margin-bottom: 2.5rem;">
+        <dt>Observation Mode</dt>
+        <dd>@Model.ObservationType</dd>
+        <dt>Target Asset</dt>
+        <dd>@(Model.Satellite?.Name ?? "Unassigned")</dd>
+        <dt>Ground Station</dt>
+        <dd>@Model.GroundStation</dd>
+        <dt>Observed Time</dt>
+        <dd>@Model.ObservedAt.ToString("dd MMMM yyyy HH:mm:ss") UTC</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post" class="ow-form-actions">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="ow-btn ow-btn--danger">Execute Purge</button>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Abort &amp; Return</a>
+    </form>
+</div>

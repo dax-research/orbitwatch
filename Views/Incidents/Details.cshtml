@@ -1,33 +1,58 @@
 @model OrbitWatch.Models.Incident
 
 @{
-    ViewData["Title"] = "Incident Details";
+    ViewData["Title"] = $"{Model.Type} — Incident Dossier";
+    var isCritical = Model.Severity.ToLowerInvariant() == "critical";
+    var statusClass = isCritical ? "ow-status--critical" : "";
 }
 
-<h1>Incident Details</h1>
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow" style="color: var(--ow-red);">INCIDENT DOSSIER // ANOMALY LOG #@Model.Id</div>
+        <h1 class="ow-page-title">@Model.Type</h1>
+        <p class="ow-page-subtitle">
+            SEVERITY: <span class="ow-status @statusClass">@Model.Severity</span> &nbsp;•&nbsp;
+            STATUS: <strong>@Model.Status</strong>
+        </p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="ow-btn">Update Incident</a>
+        <a asp-action="Index" class="ow-btn ow-btn--secondary">← Return to Log</a>
+    </div>
+</section>
 
-<dl>
-    <dt>Type</dt>
-    <dd>@Model.Type</dd>
-    <dt>Satellite</dt>
-    <dd>
-        @if (Model.Satellite != null)
-        {
-            <a asp-controller="Satellites" asp-action="Details" asp-route-id="@Model.Satellite.Id">@Model.Satellite.Name</a>
-        }
-    </dd>
-    <dt>Severity</dt>
-    <dd>@Model.Severity</dd>
-    <dt>Status</dt>
-    <dd>@Model.Status</dd>
-    <dt>Occurred At</dt>
-    <dd>@Model.OccurredAt.ToString("dd MMMM yyyy HH:mm")</dd>
-    <dt>Description</dt>
-    <dd>@Model.Description</dd>
-</dl>
+<div class="ow-details-grid">
+    <div class="ow-panel">
+        <div class="ow-eyebrow">ANOMALY PARAMETERS</div>
+        <dl class="ow-dl">
+            <dt>Affected Asset</dt>
+            <dd>
+                @if (Model.Satellite != null)
+                {
+                    <a asp-controller="Satellites" asp-action="Details" asp-route-id="@Model.Satellite.Id" class="ow-action">
+                        @Model.Satellite.Name (NORAD @Model.Satellite.NoradId)
+                    </a>
+                }
+                else
+                {
+                    <span>Unassigned</span>
+                }
+            </dd>
+            <dt>Incident Type</dt>
+            <dd>@Model.Type</dd>
+            <dt>Severity Level</dt>
+            <dd><span class="ow-status @statusClass">@Model.Severity</span></dd>
+            <dt>Investigation Status</dt>
+            <dd>@Model.Status</dd>
+            <dt>Detection Timestamp</dt>
+            <dd>@Model.OccurredAt.ToString("dd MMMM yyyy HH:mm:ss") UTC</dd>
+        </dl>
+    </div>
 
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a> |
-    <a asp-action="Index">Back to list</a>
-</p>
+    <div class="ow-panel">
+        <div class="ow-eyebrow">OPERATIONAL IMPACT ANALYSIS</div>
+        <p style="font-size: 1.05rem; line-height: 1.7; color: #222; white-space: pre-line;">
+            @Model.Description
+        </p>
+    </div>
+</div>

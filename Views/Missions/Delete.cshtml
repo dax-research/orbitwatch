@@ -1,44 +1,51 @@
 @model OrbitWatch.Models.Mission
 
 @{
-    ViewData["Title"] = "Delete Mission";
+    ViewData["Title"] = $"Decommission {Model.Name} — Mission Removal";
 }
 
-<section class="mission-page">
-    <div class="mb-4">
-        <div class="mission-eyebrow mb-2">Mission register / Confirmation required</div>
-        <h1 class="mission-title display-6 mb-2">Delete mission?</h1>
-        <p class="mission-subtitle mb-0">Review this record before permanently removing it from OrbitWatch.</p>
-    </div>
-
-    <div class="mission-panel p-3 p-md-4">
-        <div class="mission-warning p-3 mb-4">
-            <strong>Destructive action.</strong>
-            @if (Model.Satellites.Any())
-            {
-                <span> This mission currently has @Model.Satellites.Count associated satellite@(Model.Satellites.Count == 1 ? "" : "s"). The database relationship is configured to remove those satellite records when the mission is deleted.</span>
-            }
-            else
-            {
-                <span> This action cannot be undone.</span>
-            }
-        </div>
-
-        <dl class="row mb-4">
-            <dt class="col-sm-3 mission-detail-label">Mission</dt>
-            <dd class="col-sm-9 mission-detail-value">@Model.Name</dd>
-            <dt class="col-sm-3 mission-detail-label">Agency</dt>
-            <dd class="col-sm-9 mission-detail-value">@Model.Agency</dd>
-            <dt class="col-sm-3 mission-detail-label">Launch date</dt>
-            <dd class="col-sm-9 mission-detail-value">@Model.LaunchDate.ToString("dd MMMM yyyy")</dd>
-            <dt class="col-sm-3 mission-detail-label">Status</dt>
-            <dd class="col-sm-9 mission-detail-value">@Model.Status</dd>
-        </dl>
-
-        <form asp-action="Delete" method="post" class="d-flex flex-wrap gap-2">
-            <input type="hidden" asp-for="Id" />
-            <button type="submit" class="mission-button mission-button--danger">Yes, delete mission</button>
-            <a asp-action="Details" asp-route-id="@Model.Id" class="mission-button mission-button--secondary text-decoration-none">Cancel</a>
-        </form>
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">DECOMMISSION PROTOCOL // CONFIRMATION REQUIRED</div>
+        <h1 class="ow-page-title">Delete Mission?</h1>
+        <p class="ow-page-subtitle">Confirm permanent decommissioning of mission record <strong>@Model.Name</strong>.</p>
     </div>
 </section>
+
+<div class="ow-form-wrap">
+    <div class="ow-warning-box">
+        <strong>CRITICAL DESTRUCTIVE ACTION:</strong>
+        @if (Model.Satellites.Any())
+        {
+            <span>
+                This mission currently has <strong>@Model.Satellites.Count assigned satellite@(Model.Satellites.Count == 1 ? "" : "s")</strong>.
+                Deleting this mission record will cascade and permanently remove all linked satellite assets and their telemetry archives.
+            </span>
+        }
+        else
+        {
+            <span>
+                This action is permanent and will remove the mission directive from the flight register. This operation cannot be reversed.
+            </span>
+        }
+    </div>
+
+    <dl class="ow-dl" style="margin-bottom: 2.5rem;">
+        <dt>Mission</dt>
+        <dd>@Model.Name</dd>
+        <dt>Agency</dt>
+        <dd>@Model.Agency</dd>
+        <dt>Launch Date</dt>
+        <dd>@Model.LaunchDate.ToString("dd MMMM yyyy")</dd>
+        <dt>Status</dt>
+        <dd>@Model.Status</dd>
+        <dt>Assets Linked</dt>
+        <dd>@Model.Satellites.Count satellites</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post" class="ow-form-actions">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="ow-btn ow-btn--danger">Execute Deletion</button>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="ow-btn ow-btn--secondary">Abort &amp; Return</a>
+    </form>
+</div>
