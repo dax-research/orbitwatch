@@ -1,8 +1,8 @@
-@model OrbitWatch.Models.Satellite
+@model OrbitWatch.ViewModels.SatelliteDetailsViewModel
 
 @{
-    ViewData["Title"] = $"{Model.Name} — Satellite Dossier";
-    var statusClass = Model.Status.ToLowerInvariant() switch
+    ViewData["Title"] = $"{Model.Satellite.Name} — Satellite Dossier";
+    var statusClass = Model.Satellite.Status.ToLowerInvariant() switch
     {
         "active" => "ow-status--active",
         "decommissioned" => "ow-status--completed",
@@ -12,16 +12,16 @@
 
 <section class="ow-page-header">
     <div>
-        <div class="ow-eyebrow">CELESTIAL ASSET DOSSIER // NORAD #@Model.NoradId</div>
-        <h1 class="ow-page-title">@Model.Name</h1>
+        <div class="ow-eyebrow">CELESTIAL ASSET DOSSIER // NORAD #@Model.Satellite.NoradId</div>
+        <h1 class="ow-page-title">@Model.Satellite.Name</h1>
         <p class="ow-page-subtitle">
-            ORBIT: @Model.OrbitType &nbsp;•&nbsp;
-            OPERATOR: @Model.Operator (@Model.Country) &nbsp;•&nbsp;
-            <span class="ow-status @statusClass">@Model.Status</span>
+            ORBIT: @Model.Satellite.OrbitType &nbsp;•&nbsp;
+            OPERATOR: @Model.Satellite.Operator (@Model.Satellite.Country) &nbsp;•&nbsp;
+            <span class="ow-status @statusClass">@Model.Satellite.Status</span>
         </p>
     </div>
     <div style="display: flex; gap: 1rem;">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="ow-btn">Edit Asset</a>
+        <a asp-action="Edit" asp-route-id="@Model.Satellite.Id" class="ow-btn">Edit Asset</a>
         <a asp-action="Index" class="ow-btn ow-btn--secondary">← Return to Catalogue</a>
     </div>
 </section>
@@ -31,23 +31,23 @@
         <div class="ow-eyebrow">ASSET SPECIFICATION</div>
         <dl class="ow-dl">
             <dt>Spacecraft Name</dt>
-            <dd>@Model.Name</dd>
+            <dd>@Model.Satellite.Name</dd>
             <dt>NORAD Catalog ID</dt>
-            <dd style="font-family: var(--font-mono); font-size: 1.1rem;">#@Model.NoradId</dd>
+            <dd style="font-family: var(--font-mono); font-size: 1.1rem;">#@Model.Satellite.NoradId</dd>
             <dt>Sovereign Country</dt>
-            <dd>@Model.Country</dd>
+            <dd>@Model.Satellite.Country</dd>
             <dt>Operating Entity</dt>
-            <dd>@Model.Operator</dd>
+            <dd>@Model.Satellite.Operator</dd>
             <dt>Orbit Class</dt>
-            <dd><span class="ow-status">@Model.OrbitType</span></dd>
+            <dd><span class="ow-status">@Model.Satellite.OrbitType</span></dd>
             <dt>Deployment Date</dt>
-            <dd>@Model.LaunchDate.ToString("dd MMMM yyyy")</dd>
+            <dd>@Model.Satellite.LaunchDate.ToString("dd MMMM yyyy")</dd>
             <dt>Assigned Mission</dt>
             <dd>
-                @if (Model.Mission != null)
+                @if (Model.Satellite.Mission != null)
                 {
-                    <a asp-controller="Missions" asp-action="Details" asp-route-id="@Model.Mission.Id" class="ow-action">
-                        @Model.Mission.Name
+                    <a asp-controller="Missions" asp-action="Details" asp-route-id="@Model.Satellite.Mission.Id" class="ow-action">
+                        @Model.Satellite.Mission.Name
                     </a>
                 }
                 else
@@ -60,7 +60,7 @@
 
     <div class="ow-panel">
         <div class="ow-eyebrow">RECENT TELEMETRY VECTORS</div>
-        @if (Model.TrajectoryRecords.Any())
+        @if (Model.Satellite.TrajectoryRecords.Any())
         {
             <div class="ow-table-wrap">
                 <table class="ow-table">
@@ -73,7 +73,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var tr in Model.TrajectoryRecords.OrderByDescending(t => t.RecordedAt).Take(4))
+                        @foreach (var tr in Model.Satellite.TrajectoryRecords.OrderByDescending(t => t.RecordedAt).Take(4))
                         {
                             <tr>
                                 <td style="font-family: var(--font-mono); font-size: 0.78rem;">@tr.RecordedAt.ToString("dd MMM HH:mm")</td>
@@ -97,8 +97,8 @@
     </div>
 
     <div class="ow-panel">
-        <div class="ow-eyebrow" style="color: var(--ow-red);">ANOMALY INCIDENTS (@Model.Incidents.Count)</div>
-        @if (Model.Incidents.Any())
+        <div class="ow-eyebrow" style="color: var(--ow-red);">ANOMALY INCIDENTS (@Model.Satellite.Incidents.Count)</div>
+        @if (Model.Satellite.Incidents.Any())
         {
             <div class="ow-table-wrap">
                 <table class="ow-table">
@@ -111,7 +111,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var inc in Model.Incidents.OrderByDescending(i => i.OccurredAt).Take(3))
+                        @foreach (var inc in Model.Satellite.Incidents.OrderByDescending(i => i.OccurredAt).Take(3))
                         {
                             var isCrit = inc.Severity.ToLowerInvariant() == "critical";
                             <tr>
@@ -132,8 +132,8 @@
     </div>
 
     <div class="ow-panel">
-        <div class="ow-eyebrow">GROUND OBSERVATIONS (@Model.SatelliteObservations.Count)</div>
-        @if (Model.SatelliteObservations.Any())
+        <div class="ow-eyebrow">GROUND OBSERVATIONS (@Model.Satellite.SatelliteObservations.Count)</div>
+        @if (Model.Satellite.SatelliteObservations.Any())
         {
             <div class="ow-table-wrap">
                 <table class="ow-table">
@@ -146,7 +146,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var obs in Model.SatelliteObservations.OrderByDescending(o => o.ObservedAt).Take(3))
+                        @foreach (var obs in Model.Satellite.SatelliteObservations.OrderByDescending(o => o.ObservedAt).Take(3))
                         {
                             <tr>
                                 <td><span class="ow-status">@obs.ObservationType</span></td>
@@ -165,3 +165,96 @@
         }
     </div>
 </div>
+
+<section class="ow-panel ow-celestrak-panel">
+
+    <div class="ow-eyebrow">CURRENT ORBITAL DATA</div>
+
+    @if (Model.CelesTrakError != null)
+    {
+        <p class="ow-empty-state">@Model.CelesTrakError</p>
+    }
+    else if (Model.CelesTrakData == null)
+    {
+        <p class="ow-empty-state">
+            No current CelesTrak data available for this satellite.
+        </p>
+    }
+    else
+    {
+        <div class="ow-celestrak-grid">
+
+            <div class="ow-celestrak-item">
+                <span>OBJECT NAME</span>
+                <strong>@Model.CelesTrakData.ObjectName</strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>NORAD CATALOG ID</span>
+                <strong>#@Model.CelesTrakData.NoradCatalogId</strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>EPOCH</span>
+                <strong>
+                    @Model.CelesTrakData.Epoch?.ToString("dd MMM yyyy HH:mm:ss") UTC
+                </strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>MEAN MOTION</span>
+                <strong>
+                    @Model.CelesTrakData.MeanMotion?.ToString("F5") rev/day
+                </strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>ECCENTRICITY</span>
+                <strong>
+                    @Model.CelesTrakData.Eccentricity?.ToString("F7")
+                </strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>INCLINATION</span>
+                <strong>
+                    @Model.CelesTrakData.Inclination?.ToString("F4")°
+                </strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>RA OF ASCENDING NODE</span>
+                <strong>
+                    @Model.CelesTrakData.RightAscensionOfAscendingNode?.ToString("F4")°
+                </strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>ARGUMENT OF PERICENTER</span>
+                <strong>
+                    @Model.CelesTrakData.ArgumentOfPericenter?.ToString("F4")°
+                </strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>MEAN ANOMALY</span>
+                <strong>
+                    @Model.CelesTrakData.MeanAnomaly?.ToString("F4")°
+                </strong>
+            </div>
+
+            <div class="ow-celestrak-item">
+                <span>BSTAR</span>
+                <strong>
+                    @Model.CelesTrakData.BStar?.ToString("E6")
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="ow-celestrak-footer">
+            ORBITAL ELEMENTS PROVIDED BY CELESTRAK GP DATA
+        </div>
+    }
+
+</section>

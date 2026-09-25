@@ -2,16 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OrbitWatch.Models;
 using OrbitWatch.Repositories;
+using OrbitWatch.Services;
+using OrbitWatch.ViewModels;
 
 namespace OrbitWatch.Controllers
 {
     public class SatellitesController : Controller
     {
         private readonly ISatelliteRepository _repository;
+        private readonly ISatelliteApiService _satelliteApiService;
 
-        public SatellitesController(ISatelliteRepository repository)
+        public SatellitesController(
+            ISatelliteRepository repository,
+            ISatelliteApiService satelliteApiService)
         {
             _repository = repository;
+            _satelliteApiService = satelliteApiService;
         }
 
         // GET: Satellites
@@ -31,7 +37,27 @@ namespace OrbitWatch.Controllers
                 return NotFound();
             }
 
-            return View(satellite);
+            var viewModel = new SatelliteDetailsViewModel
+            {
+                Satellite = satellite
+            };
+
+            if (!string.IsNullOrWhiteSpace(satellite.NoradId))
+            {
+                try
+                {
+                    viewModel.CelesTrakData =
+                        await _satelliteApiService.GetSatelliteDataAsync(
+                            satellite.NoradId);
+                }
+                catch (HttpRequestException)
+                {
+                    viewModel.CelesTrakError =
+                        "CelesTrak data is temporarily unavailable.";
+                }
+            }
+
+            return View(viewModel);
         }
 
         // GET: Satellites/Create

@@ -11,8 +11,9 @@ public class Satellite
     [StringLength(150)]
     public string Name { get; set; } = string.Empty;
 
-    [Range(1, int.MaxValue)]
-    public int NoradId { get; set; }
+    [Required]
+    [RegularExpression(@"^\d+$", ErrorMessage = "NORAD ID must contain only numbers.")]
+    public string NoradId { get; set; } = string.Empty;
 
     [Required]
     [StringLength(100)]

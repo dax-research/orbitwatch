@@ -68,7 +68,7 @@ namespace OrbitWatch.Repositories
             return await _context.Missions.AnyAsync(m => m.Id == missionId);
         }
 
-        public async Task<bool> NoradIdExistsAsync(int noradId, int? excludeSatelliteId = null)
+        public async Task<bool> NoradIdExistsAsync(string noradId, int? excludeSatelliteId = null)
         {
             return await _context.Satellites.AnyAsync(s =>
                 s.NoradId == noradId

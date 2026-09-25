@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace OrbitWatch.Models
 {
@@ -24,19 +25,66 @@ namespace OrbitWatch.Models
         [StringLength(50)]
         public string? Status { get; set; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate(
+            ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(Status))
+            // Validate geographic coordinates
+            if (!string.IsNullOrWhiteSpace(Location))
             {
-                yield break;
+                var coordinatePattern =
+                    @"^\s*(\d{1,2}(?:\.\d+)?)\s*°?\s*([NS])\s*,\s*(\d{1,3}(?:\.\d+)?)\s*°?\s*([EW])\s*$";
+
+                var match = Regex.Match(
+                    Location,
+                    coordinatePattern,
+                    RegexOptions.IgnoreCase);
+
+                if (!match.Success)
+                {
+                    yield return new ValidationResult(
+                        "Enter coordinates in the format: 67.8557° N, 20.2251° E.",
+                        [nameof(Location)]);
+                }
+                else
+                {
+                    double latitude = double.Parse(match.Groups[1].Value);
+                    double longitude = double.Parse(match.Groups[3].Value);
+
+                    if (latitude > 90)
+                    {
+                        yield return new ValidationResult(
+                            "Latitude must be between 0° and 90°.",
+                            [nameof(Location)]);
+                    }
+
+                    if (longitude > 180)
+                    {
+                        yield return new ValidationResult(
+                            "Longitude must be between 0° and 180°.",
+                            [nameof(Location)]);
+                    }
+                }
             }
 
-            string[] allowed = ["Operational", "Maintenance", "Offline", "Decommissioned"];
-            if (!allowed.Contains(Status, StringComparer.OrdinalIgnoreCase))
+            // Validate status
+            if (!string.IsNullOrWhiteSpace(Status))
             {
-                yield return new ValidationResult(
-                    "Select a valid ground station status.",
-                    [nameof(Status)]);
+                string[] allowed =
+                [
+                    "Operational",
+                    "Maintenance",
+                    "Offline",
+                    "Decommissioned"
+                ];
+
+                if (!allowed.Contains(
+                    Status,
+                    StringComparer.OrdinalIgnoreCase))
+                {
+                    yield return new ValidationResult(
+                        "Select a valid ground station status.",
+                        [nameof(Status)]);
+                }
             }
         }
     }
