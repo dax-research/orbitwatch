@@ -1,0 +1,38 @@
+@page
+@model OrbitWatch.Areas.Identity.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="ow-section-header">
+    <h1 class="ow-title">@ViewData["Title"]</h1>
+    <p class="ow-subtitle">REGISTER FOR ORBITWATCH FLIGHT OPERATIONS</p>
+</div>
+
+<div class="ow-card" style="max-width: 500px; margin: 2rem auto;">
+    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: red; margin-bottom: 1rem;" role="alert"></div>
+        <div class="ow-form-group">
+            <label asp-for="Input.Email" class="ow-label">Email</label>
+            <input asp-for="Input.Email" class="ow-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+            <span asp-validation-for="Input.Email" class="text-danger" style="color: red; font-size: 0.85rem; margin-top: 0.5rem; display: block;"></span>
+        </div>
+        <div class="ow-form-group">
+            <label asp-for="Input.Password" class="ow-label">Password</label>
+            <input asp-for="Input.Password" class="ow-input" autocomplete="new-password" aria-required="true" placeholder="password" type="password" />
+            <span asp-validation-for="Input.Password" class="text-danger" style="color: red; font-size: 0.85rem; margin-top: 0.5rem; display: block;"></span>
+        </div>
+        <div class="ow-form-group">
+            <label asp-for="Input.ConfirmPassword" class="ow-label">Confirm Password</label>
+            <input asp-for="Input.ConfirmPassword" class="ow-input" autocomplete="new-password" aria-required="true" placeholder="password" type="password" />
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger" style="color: red; font-size: 0.85rem; margin-top: 0.5rem; display: block;"></span>
+        </div>
+        <div class="ow-form-group">
+            <button id="registerSubmit" type="submit" class="ow-btn ow-btn--primary" style="width: 100%;">Register</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrbitWatch.Models;
 using OrbitWatch.Repositories;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace OrbitWatch.Controllers
 {
+    [Authorize]
     public class GroundStationsController : Controller
     {
         private readonly IGroundStationRepository _repository;
@@ -151,3 +153,4 @@ namespace OrbitWatch.Controllers
         }
     }
 }
+

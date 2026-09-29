@@ -60,6 +60,29 @@
                         Ground Stations
                     </a>
                 </li>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="display:inline;">
+                            <button type="submit" class="ow-nav-link" style="background:none; border:none; cursor:pointer;">
+                                Logout @User.Identity?.Name
+                            </button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a asp-area="Identity" asp-page="/Account/Register" class="ow-nav-link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Account/Register" ? "active" : "")">
+                            Register
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="Identity" asp-page="/Account/Login" class="ow-nav-link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Account/Login" ? "active" : "")">
+                            Login
+                        </a>
+                    </li>
+                }
             </ul>
 
             <div class="ow-header-meta">
