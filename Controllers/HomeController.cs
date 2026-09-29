@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrbitWatch.Models;
 using OrbitWatch.Repositories;
@@ -5,6 +6,7 @@ using System.Diagnostics;
 
 namespace OrbitWatch.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IDashboardRepository _dashboardRepository;
@@ -26,6 +28,7 @@ namespace OrbitWatch.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -33,3 +36,4 @@ namespace OrbitWatch.Controllers
         }
     }
 }
+
