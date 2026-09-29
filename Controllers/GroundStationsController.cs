@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OrbitWatch.Models;
 using OrbitWatch.Repositories;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace OrbitWatch.Controllers
 {
@@ -32,8 +33,9 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: GroundStations/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await PopulateDropdowns();
             return View();
         }
 
@@ -42,6 +44,9 @@ namespace OrbitWatch.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GroundStation station)
         {
+            ModelState.Remove(nameof(station.Country));
+            ModelState.Remove(nameof(station.Agency));
+
             if (await _repository.NameExistsAsync(station.Name))
             {
                 ModelState.AddModelError(nameof(station.Name), "A ground station with this name already exists.");
@@ -49,6 +54,10 @@ namespace OrbitWatch.Controllers
 
             if (!ModelState.IsValid)
             {
+                await PopulateDropdowns(
+                    station.CountryId,
+                    station.AgencyId);
+
                 return View(station);
             }
 
@@ -60,10 +69,16 @@ namespace OrbitWatch.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var station = await _repository.GetByIdAsync(id);
+
             if (station == null)
             {
                 return NotFound();
             }
+
+            await PopulateDropdowns(
+                station.CountryId,
+                station.AgencyId);
+
             return View(station);
         }
 
@@ -77,6 +92,9 @@ namespace OrbitWatch.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove(nameof(station.Country));
+            ModelState.Remove(nameof(station.Agency));
+
             if (await _repository.NameExistsAsync(station.Name, station.Id))
             {
                 ModelState.AddModelError(nameof(station.Name), "A ground station with this name already exists.");
@@ -84,6 +102,10 @@ namespace OrbitWatch.Controllers
 
             if (!ModelState.IsValid)
             {
+                await PopulateDropdowns(
+                    station.CountryId,
+                    station.AgencyId);
+
                 return View(station);
             }
 
@@ -109,6 +131,23 @@ namespace OrbitWatch.Controllers
         {
             await _repository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task PopulateDropdowns(
+            int? countryId = null,
+            int? agencyId = null)
+        {
+            ViewBag.Countries = new SelectList(
+                await _repository.GetAllCountriesAsync(),
+                "Id",
+                "Name",
+                countryId);
+
+            ViewBag.Agencies = new SelectList(
+                await _repository.GetAllAgenciesAsync(),
+                "Id",
+                "Name",
+                agencyId);
         }
     }
 }

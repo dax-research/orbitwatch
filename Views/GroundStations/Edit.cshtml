@@ -30,16 +30,24 @@
                 <span asp-validation-for="Location" class="ow-field-error"></span>
             </div>
 
-            <div class="ow-field">
-                <label asp-for="Country" class="ow-label">HOST NATION / TERRITORY</label>
-                <input asp-for="Country" class="ow-input" />
-                <span asp-validation-for="Country" class="ow-field-error"></span>
+            <div class="form-group">
+                <label asp-for="CountryId" class="control-label">Country</label>
+                <select asp-for="CountryId"
+                        asp-items="ViewBag.Countries"
+                        class="form-control">
+                    <option value="">Select country</option>
+                </select>
+                <span asp-validation-for="CountryId" class="text-danger"></span>
             </div>
 
-            <div class="ow-field">
-                <label asp-for="Operator" class="ow-label">OPERATING ENTITY / AGENCY</label>
-                <input asp-for="Operator" class="ow-input" />
-                <span asp-validation-for="Operator" class="ow-field-error"></span>
+            <div class="form-group">
+                <label asp-for="AgencyId" class="control-label">Operator / Agency</label>
+                <select asp-for="AgencyId"
+                        asp-items="ViewBag.Agencies"
+                        class="form-control">
+                    <option value="">Select agency</option>
+                </select>
+                <span asp-validation-for="AgencyId" class="text-danger"></span>
             </div>
 
             <div class="ow-field">

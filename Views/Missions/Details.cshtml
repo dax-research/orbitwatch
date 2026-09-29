@@ -67,7 +67,7 @@
                             <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">
                                 <a asp-controller="Satellites" asp-action="Details" asp-route-id="@sat.Id">@sat.Name</a>
                             </h3>
-                            <div style="font-size: 0.85rem; color: #666;">Operator: @sat.Operator (@sat.Country)</div>
+                            <div style="font-size: 0.85rem; color: #666;">Operator: @sat.Agency?.Name (@sat.Country?.Name)</div>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
                             <span class="ow-status">@sat.Status</span>

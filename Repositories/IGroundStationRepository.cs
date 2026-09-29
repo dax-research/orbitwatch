@@ -11,5 +11,7 @@ namespace OrbitWatch.Repositories
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
         Task<bool> NameExistsAsync(string name, int? excludeStationId = null);
+        Task<IEnumerable<Country>> GetAllCountriesAsync();
+        Task<IEnumerable<Agency>> GetAllAgenciesAsync();
     }
 }

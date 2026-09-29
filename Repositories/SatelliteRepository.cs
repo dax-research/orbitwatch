@@ -17,6 +17,8 @@ namespace OrbitWatch.Repositories
         {
             return await _context.Satellites
                 .Include(s => s.Mission)
+                .Include(s => s.Country)
+                .Include(s => s.Agency)
                 .ToListAsync();
         }
 
@@ -24,6 +26,8 @@ namespace OrbitWatch.Repositories
         {
             return await _context.Satellites
                 .Include(s => s.Mission)
+                .Include(s => s.Country)
+                .Include(s => s.Agency)
                 .Include(s => s.TrajectoryRecords)
                 .Include(s => s.Incidents)
                 .Include(s => s.SatelliteObservations)
@@ -60,7 +64,23 @@ namespace OrbitWatch.Repositories
 
         public async Task<IEnumerable<Mission>> GetAllMissionsAsync()
         {
-            return await _context.Missions.ToListAsync();
+            return await _context.Missions
+                .OrderBy(m => m.Name)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Country>> GetAllCountriesAsync()
+        {
+            return await _context.Countries
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Agency>> GetAllAgenciesAsync()
+        {
+            return await _context.Agencies
+                .OrderBy(a => a.Name)
+                .ToListAsync();
         }
 
         public async Task<bool> MissionExistsAsync(int missionId)

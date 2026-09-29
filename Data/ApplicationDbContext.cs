@@ -22,6 +22,10 @@ namespace OrbitWatch.Data
 
         public DbSet<GroundStation> GroundStations { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<Agency> Agencies { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -61,6 +65,38 @@ namespace OrbitWatch.Data
             modelBuilder.Entity<GroundStation>()
                 .HasIndex(g => g.Name)
                 .IsUnique();
+
+            // Restrict Country/Agency deletes to avoid SQL Server multiple cascade paths
+            // (Agency -> Mission -> Satellite and Agency -> Satellite).
+            modelBuilder.Entity<Mission>()
+                .HasOne(m => m.Agency)
+                .WithMany(a => a.Missions)
+                .HasForeignKey(m => m.AgencyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Satellite>()
+                .HasOne(s => s.Agency)
+                .WithMany(a => a.Satellites)
+                .HasForeignKey(s => s.AgencyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Satellite>()
+                .HasOne(s => s.Country)
+                .WithMany(c => c.Satellites)
+                .HasForeignKey(s => s.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroundStation>()
+                .HasOne(g => g.Country)
+                .WithMany(c => c.GroundStations)
+                .HasForeignKey(g => g.CountryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroundStation>()
+                .HasOne(g => g.Agency)
+                .WithMany(a => a.GroundStations)
+                .HasForeignKey(g => g.AgencyId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -23,7 +23,7 @@
             <div class="ow-card-grid-item">
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-                        <span class="ow-tag">@station.Country</span>
+                        <span class="ow-tag">@station.Country?.Name</span>
                         <span class="ow-status ow-status--active">@(station.Status ?? "OPERATIONAL")</span>
                     </div>
 
@@ -36,7 +36,7 @@
                     </div>
 
                     <div style="font-size: 0.9rem; color: #777;">
-                        Operator: <strong>@(station.Operator ?? "National Space Agency")</strong>
+                        Operator: <strong>@(station.Agency?.Name ?? "National Space Agency")</strong>
                     </div>
                 </div>
 

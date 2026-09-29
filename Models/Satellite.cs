@@ -15,13 +15,11 @@ public class Satellite
     [RegularExpression(@"^\d+$", ErrorMessage = "NORAD ID must contain only numbers.")]
     public string NoradId { get; set; } = string.Empty;
 
-    [Required]
-    [StringLength(100)]
-    public string Country { get; set; } = string.Empty;
+    public int CountryId { get; set; }
+    public Country Country { get; set; } = null!;
 
-    [Required]
-    [StringLength(150)]
-    public string Operator { get; set; } = string.Empty;
+    public int AgencyId { get; set; }
+    public Agency Agency { get; set; } = null!;
 
     [DataType(DataType.Date)]
     [NotFuture(DateOnly = true, ErrorMessage = "Satellite launch date cannot be in the future.")]

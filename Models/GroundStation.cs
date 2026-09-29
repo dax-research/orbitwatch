@@ -15,12 +15,11 @@ namespace OrbitWatch.Models
         [StringLength(100)]
         public required string Location { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public required string Country { get; set; }
+        public int CountryId { get; set; }
+        public Country Country { get; set; } = null!;
 
-        [StringLength(100)]
-        public string? Operator { get; set; }
+        public int? AgencyId { get; set; }
+        public Agency? Agency { get; set; }
 
         [StringLength(50)]
         public string? Status { get; set; }

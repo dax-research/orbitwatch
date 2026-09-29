@@ -63,7 +63,7 @@ namespace OrbitWatch.Controllers
         // GET: Satellites/Create
         public async Task<IActionResult> Create()
         {
-            await PopulateMissionsDropDownList();
+            await PopulateDropdowns();
             return View();
         }
 
@@ -73,6 +73,8 @@ namespace OrbitWatch.Controllers
         public async Task<IActionResult> Create(Satellite satellite)
         {
             ModelState.Remove(nameof(satellite.Mission));
+            ModelState.Remove(nameof(satellite.Country));
+            ModelState.Remove(nameof(satellite.Agency));
 
             if (await _repository.NoradIdExistsAsync(satellite.NoradId))
             {
@@ -86,7 +88,11 @@ namespace OrbitWatch.Controllers
 
             if (!ModelState.IsValid)
             {
-                await PopulateMissionsDropDownList(satellite.MissionId);
+                await PopulateDropdowns(
+                    satellite.MissionId,
+                    satellite.CountryId,
+                    satellite.AgencyId);
+
                 return View(satellite);
             }
 
@@ -104,7 +110,11 @@ namespace OrbitWatch.Controllers
                 return NotFound();
             }
 
-            await PopulateMissionsDropDownList(satellite.MissionId);
+            await PopulateDropdowns(
+                satellite.MissionId,
+                satellite.CountryId,
+                satellite.AgencyId);
+
             return View(satellite);
         }
 
@@ -119,6 +129,8 @@ namespace OrbitWatch.Controllers
             }
 
             ModelState.Remove(nameof(satellite.Mission));
+            ModelState.Remove(nameof(satellite.Country));
+            ModelState.Remove(nameof(satellite.Agency));
 
             if (await _repository.NoradIdExistsAsync(satellite.NoradId, satellite.Id))
             {
@@ -132,7 +144,11 @@ namespace OrbitWatch.Controllers
 
             if (!ModelState.IsValid)
             {
-                await PopulateMissionsDropDownList(satellite.MissionId);
+                await PopulateDropdowns(
+                    satellite.MissionId,
+                    satellite.CountryId,
+                    satellite.AgencyId);
+
                 return View(satellite);
             }
 
@@ -162,10 +178,28 @@ namespace OrbitWatch.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task PopulateMissionsDropDownList(int? selectedMissionId = null)
+        private async Task PopulateDropdowns(
+            int? missionId = null,
+            int? countryId = null,
+            int? agencyId = null)
         {
-            var missions = await _repository.GetAllMissionsAsync();
-            ViewBag.MissionId = new SelectList(missions, "Id", "Name", selectedMissionId);
+            ViewBag.Missions = new SelectList(
+                await _repository.GetAllMissionsAsync(),
+                "Id",
+                "Name",
+                missionId);
+
+            ViewBag.Countries = new SelectList(
+                await _repository.GetAllCountriesAsync(),
+                "Id",
+                "Name",
+                countryId);
+
+            ViewBag.Agencies = new SelectList(
+                await _repository.GetAllAgenciesAsync(),
+                "Id",
+                "Name",
+                agencyId);
         }
     }
 }

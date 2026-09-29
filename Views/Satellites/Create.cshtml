@@ -31,15 +31,19 @@
                 </div>
 
                 <div class="ow-field">
-                    <label asp-for="Country" class="ow-label"></label>
-                    <input asp-for="Country" class="ow-input" placeholder="e.g. USA" />
-                    <span asp-validation-for="Country" class="ow-field-error"></span>
+                    <label asp-for="CountryId" class="ow-label">Country</label>
+                    <select asp-for="CountryId" asp-items="ViewBag.Countries" class="ow-select">
+                        <option value="">Select country</option>
+                    </select>
+                    <span asp-validation-for="CountryId" class="ow-field-error"></span>
                 </div>
 
-                <div class="ow-field ow-field--wide">
-                    <label asp-for="Operator" class="ow-label"></label>
-                    <input asp-for="Operator" class="ow-input" placeholder="e.g. ESA" />
-                    <span asp-validation-for="Operator" class="ow-field-error"></span>
+                <div class="ow-field">
+                    <label asp-for="AgencyId" class="ow-label">Agency</label>
+                    <select asp-for="AgencyId" asp-items="ViewBag.Agencies" class="ow-select">
+                        <option value="">Select agency</option>
+                    </select>
+                    <span asp-validation-for="AgencyId" class="ow-field-error"></span>
                 </div>
 
                 <div class="ow-field">
@@ -75,7 +79,7 @@
 
                 <div class="ow-field">
                     <label asp-for="MissionId" class="ow-label"></label>
-                    <select asp-for="MissionId" asp-items="ViewBag.MissionId" class="ow-select">
+                    <select asp-for="MissionId" asp-items="ViewBag.Missions" class="ow-select">
                         <option value="">Select mission</option>
                     </select>
                     <span asp-validation-for="MissionId" class="ow-field-error"></span>

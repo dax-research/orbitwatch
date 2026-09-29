@@ -19,9 +19,8 @@ public class Mission : IValidatableObject
     [DataType(DataType.Date)]
     public DateTime? EndDate { get; set; }
 
-    [Required]
-    [StringLength(150)]
-    public string Agency { get; set; } = string.Empty;
+    public int AgencyId { get; set; }
+    public Agency Agency { get; set; } = null!;
 
     [Required]
     [StringLength(50)]

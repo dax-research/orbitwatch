@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OrbitWatch.Models;
 using OrbitWatch.Repositories;
 
@@ -35,8 +36,9 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: Missions/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await PopulateAgencies();
             return View();
         }
 
@@ -45,8 +47,11 @@ namespace OrbitWatch.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Mission mission)
         {
+            ModelState.Remove(nameof(mission.Agency));
+
             if (!ModelState.IsValid)
             {
+                await PopulateAgencies(mission.AgencyId);
                 return View(mission);
             }
 
@@ -65,6 +70,8 @@ namespace OrbitWatch.Controllers
                 return NotFound();
             }
 
+            await PopulateAgencies(mission.AgencyId);
+
             return View(mission);
         }
 
@@ -78,8 +85,11 @@ namespace OrbitWatch.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove(nameof(mission.Agency));
+
             if (!ModelState.IsValid)
             {
+                await PopulateAgencies(mission.AgencyId);
                 return View(mission);
             }
 
@@ -109,6 +119,15 @@ namespace OrbitWatch.Controllers
             await _repository.DeleteAsync(id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task PopulateAgencies(int? agencyId = null)
+        {
+            ViewBag.Agencies = new SelectList(
+                await _repository.GetAllAgenciesAsync(),
+                "Id",
+                "Name",
+                agencyId);
         }
     }
 }

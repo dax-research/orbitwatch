@@ -24,10 +24,14 @@
                 <span asp-validation-for="Name" class="ow-field-error"></span>
             </div>
 
-            <div class="ow-field">
-                <label asp-for="Agency" class="ow-label">OPERATING AGENCY</label>
-                <input asp-for="Agency" class="ow-input" />
-                <span asp-validation-for="Agency" class="ow-field-error"></span>
+            <div class="ow-form-grid">
+                <label asp-for="AgencyId" class="control-label">Agency</label>
+                <select asp-for="AgencyId"
+                        asp-items="ViewBag.Agencies"
+                        class="form-control">
+                    <option value="">Select agency</option>
+                </select>
+                <span asp-validation-for="AgencyId" class="text-danger"></span>
             </div>
 
             <div class="ow-field">

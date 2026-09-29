@@ -16,12 +16,14 @@ namespace OrbitWatch.Repositories
         public async Task<IEnumerable<Mission>> GetAllAsync()
         {
             return await _context.Missions
+                .Include(m => m.Agency)
                 .ToListAsync();
         }
 
         public async Task<Mission?> GetByIdAsync(int id)
         {
             return await _context.Missions
+                .Include(m => m.Agency)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
@@ -52,6 +54,13 @@ namespace OrbitWatch.Repositories
         {
             return await _context.Missions
                 .AnyAsync(m => m.Id == id);
+        }
+
+        public async Task<IEnumerable<Agency>> GetAllAgenciesAsync()
+        {
+            return await _context.Agencies
+                .OrderBy(a => a.Name)
+                .ToListAsync();
         }
     }
 }

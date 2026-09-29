@@ -16,7 +16,7 @@
         <h1 class="ow-page-title">@Model.Satellite.Name</h1>
         <p class="ow-page-subtitle">
             ORBIT: @Model.Satellite.OrbitType &nbsp;•&nbsp;
-            OPERATOR: @Model.Satellite.Operator (@Model.Satellite.Country) &nbsp;•&nbsp;
+            AGENCY: @Model.Satellite.Agency.Name (@Model.Satellite.Country.Name) &nbsp;•&nbsp;
             <span class="ow-status @statusClass">@Model.Satellite.Status</span>
         </p>
     </div>
@@ -35,9 +35,9 @@
             <dt>NORAD Catalog ID</dt>
             <dd style="font-family: var(--font-mono); font-size: 1.1rem;">#@Model.Satellite.NoradId</dd>
             <dt>Sovereign Country</dt>
-            <dd>@Model.Satellite.Country</dd>
+            <dd>@Model.Satellite.Country.Name</dd>
             <dt>Operating Entity</dt>
-            <dd>@Model.Satellite.Operator</dd>
+            <dd>@Model.Satellite.Agency.Name</dd>
             <dt>Orbit Class</dt>
             <dd><span class="ow-status">@Model.Satellite.OrbitType</span></dd>
             <dt>Deployment Date</dt>

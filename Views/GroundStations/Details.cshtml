@@ -28,9 +28,9 @@
             <dt>Geographic Location</dt>
             <dd>@Model.Location</dd>
             <dt>Sovereign Host</dt>
-            <dd>@Model.Country</dd>
+            <dd>@Model.Country?.Name</dd>
             <dt>Operating Authority</dt>
-            <dd>@(Model.Operator ?? "Not specified")</dd>
+            <dd>@(Model.Agency?.Name ?? "Not specified")</dd>
             <dt>Network Status</dt>
             <dd><span class="ow-status ow-status--active">@(Model.Status ?? "Operational")</span></dd>
         </dl>

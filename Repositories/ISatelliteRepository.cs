@@ -13,5 +13,9 @@ namespace OrbitWatch.Repositories
         Task<IEnumerable<Mission>> GetAllMissionsAsync();
         Task<bool> MissionExistsAsync(int missionId);
         Task<bool> NoradIdExistsAsync(string noradId, int? excludeSatelliteId = null);
+
+        Task<IEnumerable<Country>> GetAllCountriesAsync();
+
+        Task<IEnumerable<Agency>> GetAllAgenciesAsync();
     }
 }

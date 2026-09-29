@@ -37,7 +37,7 @@
                         <a asp-action="Details" asp-route-id="@mission.Id">@mission.Name</a>
                     </div>
                     <div class="ow-list-meta">
-                        AGENCY: @mission.Agency &nbsp;•&nbsp;
+                        AGENCY: @mission.Agency?.Name &nbsp;•&nbsp;
                         @mission.Satellites.Count SATELLITE@(mission.Satellites.Count == 1 ? "" : "S") DEPLOYED
                     </div>
                 </div>

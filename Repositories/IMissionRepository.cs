@@ -10,5 +10,6 @@ namespace OrbitWatch.Repositories
         Task UpdateAsync(Mission mission);
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
+        Task<IEnumerable<Agency>> GetAllAgenciesAsync();
     }
 }

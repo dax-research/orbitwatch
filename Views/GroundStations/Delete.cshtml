@@ -24,9 +24,9 @@
         <dt>Location</dt>
         <dd>@Model.Location</dd>
         <dt>Host Country</dt>
-        <dd>@Model.Country</dd>
+        <dd>@Model.Country?.Name</dd>
         <dt>Operating Authority</dt>
-        <dd>@(Model.Operator ?? "—")</dd>
+        <dd>@(Model.Agency?.Name ?? "—")</dd>
         <dt>Status</dt>
         <dd>@(Model.Status ?? "Operational")</dd>
     </dl>

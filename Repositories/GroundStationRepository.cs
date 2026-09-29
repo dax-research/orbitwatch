@@ -15,12 +15,18 @@ namespace OrbitWatch.Repositories
 
         public async Task<IEnumerable<GroundStation>> GetAllAsync()
         {
-            return await _context.GroundStations.ToListAsync();
+            return await _context.GroundStations
+                .Include(g => g.Country)
+                .Include(g => g.Agency)
+                .ToListAsync();
         }
 
         public async Task<GroundStation?> GetByIdAsync(int id)
         {
-            return await _context.GroundStations.FirstOrDefaultAsync(g => g.Id == id);
+            return await _context.GroundStations
+                .Include(g => g.Country)
+                .Include(g => g.Agency)
+                .FirstOrDefaultAsync(g => g.Id == id);
         }
 
         public async Task AddAsync(GroundStation station)
@@ -55,6 +61,20 @@ namespace OrbitWatch.Repositories
             return await _context.GroundStations.AnyAsync(g =>
                 g.Name == name
                 && (!excludeStationId.HasValue || g.Id != excludeStationId.Value));
+        }
+
+        public async Task<IEnumerable<Country>> GetAllCountriesAsync()
+        {
+            return await _context.Countries
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Agency>> GetAllAgenciesAsync()
+        {
+            return await _context.Agencies
+                .OrderBy(a => a.Name)
+                .ToListAsync();
         }
     }
 }
