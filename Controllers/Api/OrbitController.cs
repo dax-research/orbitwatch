@@ -40,25 +40,23 @@ namespace OrbitWatch.Controllers.Api
 
             try
             {
-                var gpData = await _satelliteApiService.GetSatelliteDataAsync(satellite.NoradId);
-                if (gpData == null)
+                var result = await _satelliteApiService.GetSatelliteDataAsync(satellite.NoradId);
+                if (result.Data == null)
                 {
                     return StatusCode(502, new { error = "Orbital data unavailable from CelesTrak." });
                 }
 
                 var targetTime = timestamp ?? DateTime.UtcNow;
-                var position = _orbitPropagationService.GetPosition(gpData, targetTime);
+                var position = _orbitPropagationService.GetPosition(result.Data, targetTime);
 
                 if (position == null)
                 {
                     return StatusCode(500, new { error = "Failed to propagate orbit for the given timestamp." });
                 }
 
+                position.IsStaleOrbitalData = result.IsStale;
+
                 return Ok(position);
-            }
-            catch (HttpRequestException)
-            {
-                return StatusCode(502, new { error = "Failed to communicate with CelesTrak API." });
             }
             catch (Exception)
             {

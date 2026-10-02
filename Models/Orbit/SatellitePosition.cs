@@ -36,5 +36,10 @@ namespace OrbitWatch.Models.Orbit
         /// Orbital velocity magnitude in kilometers per second.
         /// </summary>
         public double VelocityKmPerSec { get; set; }
+
+        /// <summary>
+        /// Indicates if the position was propagated using stale orbital elements.
+        /// </summary>
+        public bool IsStaleOrbitalData { get; set; }
     }
 }

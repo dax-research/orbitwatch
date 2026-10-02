@@ -43,6 +43,7 @@ namespace OrbitWatch.Tests
             
             var satellite = new Satellite { Id = satelliteId, NoradId = noradId };
             var gpData = new CelesTrakGpData { NoradCatalogId = 25544 };
+            var apiResult = new CelesTrakResult { Data = gpData, IsStale = false };
             var expectedPosition = new SatellitePosition
             {
                 NoradCatalogId = 25544,
@@ -54,7 +55,7 @@ namespace OrbitWatch.Tests
             };
 
             _repoMock.Setup(r => r.GetByIdAsync(satelliteId)).ReturnsAsync(satellite);
-            _apiServiceMock.Setup(s => s.GetSatelliteDataAsync(noradId)).ReturnsAsync(gpData);
+            _apiServiceMock.Setup(s => s.GetSatelliteDataAsync(noradId)).ReturnsAsync(apiResult);
             _propagationServiceMock.Setup(p => p.GetPosition(gpData, timestamp)).Returns(expectedPosition);
 
             // Act
@@ -68,6 +69,42 @@ namespace OrbitWatch.Tests
             Assert.Equal(-90.0, position.LongitudeDegrees);
             Assert.Equal(400.0, position.AltitudeKm);
             Assert.Equal(7.5, position.VelocityKmPerSec);
+            Assert.False(position.IsStaleOrbitalData);
+        }
+
+        [Fact]
+        public async Task GetPosition_StaleData_ReturnsPositionWithStaleFlag()
+        {
+            // Arrange
+            var satelliteId = 1;
+            var noradId = "25544";
+            var timestamp = new DateTime(2024, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+            
+            var satellite = new Satellite { Id = satelliteId, NoradId = noradId };
+            var gpData = new CelesTrakGpData { NoradCatalogId = 25544 };
+            var apiResult = new CelesTrakResult { Data = gpData, IsStale = true };
+            var expectedPosition = new SatellitePosition
+            {
+                NoradCatalogId = 25544,
+                TimestampUtc = timestamp,
+                LatitudeDegrees = 45.0,
+                LongitudeDegrees = -90.0,
+                AltitudeKm = 400.0,
+                VelocityKmPerSec = 7.5
+            };
+
+            _repoMock.Setup(r => r.GetByIdAsync(satelliteId)).ReturnsAsync(satellite);
+            _apiServiceMock.Setup(s => s.GetSatelliteDataAsync(noradId)).ReturnsAsync(apiResult);
+            _propagationServiceMock.Setup(p => p.GetPosition(gpData, timestamp)).Returns(expectedPosition);
+
+            // Act
+            var result = await _controller.GetPosition(satelliteId, timestamp);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var position = Assert.IsType<SatellitePosition>(okResult.Value);
+            
+            Assert.True(position.IsStaleOrbitalData);
         }
 
         [Fact]
@@ -91,9 +128,10 @@ namespace OrbitWatch.Tests
             var satelliteId = 1;
             var noradId = "25544";
             var satellite = new Satellite { Id = satelliteId, NoradId = noradId };
+            var apiResult = new CelesTrakResult { Data = null, IsStale = false };
 
             _repoMock.Setup(r => r.GetByIdAsync(satelliteId)).ReturnsAsync(satellite);
-            _apiServiceMock.Setup(s => s.GetSatelliteDataAsync(noradId)).ReturnsAsync((CelesTrakGpData?)null);
+            _apiServiceMock.Setup(s => s.GetSatelliteDataAsync(noradId)).ReturnsAsync(apiResult);
 
             // Act
             var result = await _controller.GetPosition(satelliteId, null);
@@ -113,9 +151,10 @@ namespace OrbitWatch.Tests
             
             var satellite = new Satellite { Id = satelliteId, NoradId = noradId };
             var gpData = new CelesTrakGpData { NoradCatalogId = 25544 };
+            var apiResult = new CelesTrakResult { Data = gpData, IsStale = false };
 
             _repoMock.Setup(r => r.GetByIdAsync(satelliteId)).ReturnsAsync(satellite);
-            _apiServiceMock.Setup(s => s.GetSatelliteDataAsync(noradId)).ReturnsAsync(gpData);
+            _apiServiceMock.Setup(s => s.GetSatelliteDataAsync(noradId)).ReturnsAsync(apiResult);
             _propagationServiceMock.Setup(p => p.GetPosition(gpData, timestamp)).Returns((SatellitePosition?)null);
 
             // Act

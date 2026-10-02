@@ -139,74 +139,42 @@
     }
 
     function createEarth() {
-        // Solid dark earth sphere
+        const textureLoader = new THREE.TextureLoader();
+        
+        // Solid textured earth sphere
         const earthGeometry = new THREE.SphereGeometry(EARTH_RADIUS, 64, 64);
         const earthMaterial = new THREE.MeshPhongMaterial({
-            color: 0x1a1a1a,
-            emissive: 0x050505,
-            specular: 0x222222,
+            map: textureLoader.load('/assets/textures/earth_surface.jpg'),
+            specular: new THREE.Color(0x222222),
             shininess: 15
         });
         earth = new THREE.Mesh(earthGeometry, earthMaterial);
         scene.add(earth);
 
-        // Wireframe grid overlay — editorial aesthetic
-        const wireGeometry = new THREE.SphereGeometry(EARTH_RADIUS + 0.15, 36, 18);
-        const wireMaterial = new THREE.MeshBasicMaterial({
-            color: 0x333333,
-            wireframe: true,
+        // Cloud layer
+        const cloudGeometry = new THREE.SphereGeometry(EARTH_RADIUS + 0.25, 64, 64);
+        const cloudMaterial = new THREE.MeshPhongMaterial({
+            map: textureLoader.load('/assets/textures/earth_clouds.png'),
             transparent: true,
-            opacity: 0.3
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
         });
-        const wireframe = new THREE.Mesh(wireGeometry, wireMaterial);
-        scene.add(wireframe);
+        const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+        earth.add(clouds);
 
-        // Equator ring
-        const equatorGeometry = new THREE.RingGeometry(EARTH_RADIUS + 0.3, EARTH_RADIUS + 0.5, 128);
-        const equatorMaterial = new THREE.MeshBasicMaterial({
-            color: 0x444444,
-            side: THREE.DoubleSide,
+        // Atmosphere glow
+        const atmosGeometry = new THREE.SphereGeometry(EARTH_RADIUS + 1.5, 64, 64);
+        const atmosMaterial = new THREE.MeshPhongMaterial({
+            color: 0x4ca6ff,
             transparent: true,
-            opacity: 0.5
+            opacity: 0.15,
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
         });
-        const equator = new THREE.Mesh(equatorGeometry, equatorMaterial);
-        equator.rotation.x = Math.PI / 2;
-        scene.add(equator);
-
-        // Latitude reference lines at ±30° and ±60°
-        [30, -30, 60, -60].forEach(lat => {
-            const latRad = lat * (Math.PI / 180);
-            const r = EARTH_RADIUS * Math.cos(latRad);
-            const y = EARTH_RADIUS * Math.sin(latRad);
-            const ringGeo = new THREE.RingGeometry(r - 0.05, r + 0.05, 64);
-            const ringMat = new THREE.MeshBasicMaterial({
-                color: 0x2a2a2a,
-                side: THREE.DoubleSide,
-                transparent: true,
-                opacity: 0.3
-            });
-            const ring = new THREE.Mesh(ringGeo, ringMat);
-            ring.rotation.x = Math.PI / 2;
-            ring.position.y = y;
-            scene.add(ring);
-        });
-
-        // Prime meridian and 90° longitude lines
-        [0, 90, 180, 270].forEach(lonDeg => {
-            const points = [];
-            for (let lat = -90; lat <= 90; lat += 2) {
-                const pos = geoToCartesian(lat, lonDeg, 0);
-                points.push(new THREE.Vector3(pos.x, pos.y, pos.z));
-            }
-            const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-            const lineMat = new THREE.LineBasicMaterial({
-                color: 0x2a2a2a,
-                transparent: true,
-                opacity: 0.25
-            });
-            const line = new THREE.Line(lineGeo, lineMat);
-            scene.add(line);
-        });
+        const atmosphere = new THREE.Mesh(atmosGeometry, atmosMaterial);
+        earth.add(atmosphere);
     }
 
     function createSatelliteMarker() {
@@ -342,6 +310,8 @@
                 return response.json();
             })
             .then(position => {
+                if (currentSatelliteId !== satelliteId) return; // Prevent race conditions
+                
                 hideLoading();
 
                 if (!position || position.latitudeDegrees === undefined) {
@@ -389,10 +359,12 @@
                 }
 
                 // Update info panel
-                updateInfoPanel(position);
+                updateInfoPanel(position, satelliteId);
                 showInfoPanel();
             })
             .catch(err => {
+                if (currentSatelliteId !== satelliteId) return;
+                
                 hideLoading();
                 showError(err.message || 'Failed to fetch satellite position.');
                 hideSatelliteMarker();
@@ -409,8 +381,9 @@
     // =========================================================================
     //  INFO PANEL UPDATE
     // =========================================================================
-    function updateInfoPanel(position) {
-        const selected = satelliteSelect.options[satelliteSelect.selectedIndex];
+    function updateInfoPanel(position, satelliteId) {
+        const selected = Array.from(satelliteSelect.options).find(opt => opt.value === satelliteId);
+        if (!selected) return;
 
         infoName.textContent = selected.dataset.name || '—';
         infoNorad.textContent = selected.dataset.norad || '—';
@@ -428,6 +401,13 @@
 
         const ts = new Date(position.timestampUtc);
         propTimestamp.textContent = ts.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+        
+        if (position.isStaleOrbitalData) {
+            propTimestamp.textContent += ' (STALE)';
+            propTimestamp.style.color = 'var(--ow-yellow)';
+        } else {
+            propTimestamp.style.color = '';
+        }
     }
 
     // =========================================================================
