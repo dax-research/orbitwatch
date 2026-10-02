@@ -41,6 +41,11 @@
                     </a>
                 </li>
                 <li>
+                    <a asp-controller="Tracking" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tracking" ? "active" : "")">
+                        Tracking
+                    </a>
+                </li>
+                <li>
                     <a asp-controller="TrajectoryRecords" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "TrajectoryRecords" ? "active" : "")">
                         Trajectories
                     </a>

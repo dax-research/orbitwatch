@@ -1,0 +1,107 @@
+@model IEnumerable<OrbitWatch.Models.Satellite>
+
+@{
+    ViewData["Title"] = "Orbital Tracking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">SGP4 PROPAGATION // REAL-TIME ORBITAL POSITION</div>
+        <h1 class="ow-page-title">Orbital Tracking</h1>
+        <p class="ow-page-subtitle">3D globe visualization of satellite positions propagated from CelesTrak orbital elements via SGP4.</p>
+    </div>
+</section>
+
+<!-- Tracking Interface -->
+<div class="ow-tracking-layout">
+    <!-- Sidebar Controls -->
+    <aside class="ow-tracking-sidebar">
+        <div class="ow-tracking-control">
+            <label class="ow-label" for="owSatelliteSelect">Select Satellite</label>
+            <select class="ow-select" id="owSatelliteSelect">
+                <option value="">— Select Satellite —</option>
+                @foreach (var sat in Model)
+                {
+                    <option value="@sat.Id" data-norad="@sat.NoradId" data-name="@sat.Name" data-orbit="@sat.OrbitType" data-status="@sat.Status">
+                        @sat.Name — NORAD @sat.NoradId
+                    </option>
+                }
+            </select>
+        </div>
+
+        <!-- Satellite Info Panel -->
+        <div class="ow-tracking-info" id="owSatInfo" style="display: none;">
+            <div class="ow-tracking-info-header">
+                <span class="ow-tag ow-tag--dark">SATELLITE DATA</span>
+                <span class="ow-status ow-status--active" id="owSatStatus"></span>
+            </div>
+
+            <dl class="ow-tracking-dl">
+                <dt>NAME</dt>
+                <dd id="owInfoName">—</dd>
+                <dt>NORAD ID</dt>
+                <dd id="owInfoNorad">—</dd>
+                <dt>ORBIT</dt>
+                <dd id="owInfoOrbit">—</dd>
+            </dl>
+
+            <div class="ow-tracking-divider"></div>
+
+            <div class="ow-tracking-info-header">
+                <span class="ow-tag ow-tag--dark">PROPAGATED POSITION</span>
+                <span class="ow-tag" id="owPropTimestamp">—</span>
+            </div>
+
+            <dl class="ow-tracking-dl">
+                <dt>LATITUDE</dt>
+                <dd id="owInfoLat">—</dd>
+                <dt>LONGITUDE</dt>
+                <dd id="owInfoLon">—</dd>
+                <dt>ALTITUDE</dt>
+                <dd id="owInfoAlt">—</dd>
+                <dt>VELOCITY</dt>
+                <dd id="owInfoVel">—</dd>
+            </dl>
+
+            <div class="ow-tracking-divider"></div>
+
+            <button class="ow-btn ow-btn--secondary" id="owRefreshBtn" style="width: 100%; margin-top: 0.5rem;">
+                ↻ Refresh Position
+            </button>
+        </div>
+
+        <!-- Loading/Error States -->
+        <div class="ow-tracking-message" id="owLoadingMsg" style="display: none;">
+            <span class="ow-tag">ACQUIRING SIGNAL…</span>
+        </div>
+
+        <div class="ow-tracking-message ow-tracking-message--error" id="owErrorMsg" style="display: none;">
+            <span class="ow-tag" style="color: var(--ow-red);">SIGNAL LOST</span>
+            <p id="owErrorText"></p>
+        </div>
+    </aside>
+
+    <!-- Globe Container -->
+    <div class="ow-tracking-globe-wrap">
+        <div id="owGlobeContainer" class="ow-tracking-globe">
+            <div class="ow-tracking-globe-placeholder" id="owGlobePlaceholder">
+                <div class="ow-tracking-globe-placeholder-inner">
+                    <div class="ow-eyebrow" style="justify-content: center;">3D ORBITAL VISUALIZATION</div>
+                    <p style="color: var(--ow-muted); font-size: 0.92rem; margin-top: 0.5rem;">
+                        Select a satellite to initialize globe tracking.
+                    </p>
+                </div>
+            </div>
+            <canvas id="owGlobeCanvas"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+            integrity="sha512-dLRAxnqEuQ2Ha1GNYA4IM+GFm6bFqlkg2/sEfnr1p91LMqMqpMeLBqMLk0zzEfYbKTTQiMMLhJGRD1jGqcEEg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/tracking-globe.js" asp-append-version="true"></script>
+}
