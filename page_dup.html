@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — ORBITWATCH / SPACE OPERATIONS</title>
+
+    <!-- Google Fonts: Barlow Condensed (Display), Inter (Body), Space Mono (Metadata) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/site.css?v=pzhCtJzf1xli3HJX_PsoBjiThZ1CzjiMXUOQkyNEW0Q" />
+</head>
+<body>
+    <header b-kant7sm97w class="ow-header">
+        <div b-kant7sm97w class="ow-nav-bar">
+            <a class="ow-brand" href="/">
+                <span b-kant7sm97w class="ow-logo-mark"></span>
+                <span b-kant7sm97w class="ow-brand-title">ORBITWATCH</span>
+            </a>
+
+            <button b-kant7sm97w type="button" class="ow-nav-toggle" id="owNavToggle" aria-label="Toggle navigation">
+                MENU [≡]
+            </button>
+
+            <ul b-kant7sm97w class="ow-nav-links" id="owNavLinks">
+                <li b-kant7sm97w>
+                    <a class="ow-nav-link " href="/">
+                        Dashboard
+                    </a>
+                </li>
+                <li b-kant7sm97w>
+                    <a class="ow-nav-link " href="/Missions">
+                        Missions
+                    </a>
+                </li>
+                <li b-kant7sm97w>
+                    <a class="ow-nav-link " href="/Satellites">
+                        Satellites
+                    </a>
+                </li>
+                <li b-kant7sm97w>
+                    <a class="ow-nav-link " href="/TrajectoryRecords">
+                        Trajectories
+                    </a>
+                </li>
+                <li b-kant7sm97w>
+                    <a class="ow-nav-link " href="/Incidents">
+                        Incidents
+                    </a>
+                </li>
+                <li b-kant7sm97w>
+                    <a class="ow-nav-link " href="/SatelliteObservations">
+                        Observations
+                    </a>
+                </li>
+                <li b-kant7sm97w>
+                    <a class="ow-nav-link " href="/GroundStations">
+                        Ground Stations
+                    </a>
+                </li>
+                    <li b-kant7sm97w>
+                        <a class="ow-nav-link active" href="/Identity/Account/Register">
+                            Register
+                        </a>
+                    </li>
+                    <li b-kant7sm97w>
+                        <a class="ow-nav-link " href="/Identity/Account/Login">
+                            Login
+                        </a>
+                    </li>
+            </ul>
+
+            <div b-kant7sm97w class="ow-header-meta">
+                <span b-kant7sm97w class="ow-status-dot"></span>
+                <span b-kant7sm97w id="owLiveUtc">UTC 00:00:00</span>
+                <span b-kant7sm97w>• FLIGHT OPS</span>
+            </div>
+        </div>
+    </header>
+
+    <main b-kant7sm97w role="main" class="ow-main-container">
+        <div b-kant7sm97w class="ow-editorial-frame">
+            
+<div class="ow-section-header">
+    <h1 class="ow-title">Register</h1>
+    <p class="ow-subtitle">REGISTER FOR ORBITWATCH FLIGHT OPERATIONS</p>
+</div>
+
+<div class="ow-card" style="max-width: 500px; margin: 2rem auto;">
+    <form id="registerForm" method="post" action="/Identity/Account/Register">
+        
+        <div class="ow-form-group">
+            <label class="ow-label" for="Input_Email">Email</label>
+            <input class="ow-input" autocomplete="username" aria-required="true" placeholder="name@example.com" type="email" data-val="true" data-val-email="The Email field is not a valid e-mail address." data-val-required="The Email field is required." id="Input_Email" name="Input.Email" value="" />
+            <span class="text-danger field-validation-valid" style="color: red; font-size: 0.85rem; margin-top: 0.5rem; display: block;" data-valmsg-for="Input.Email" data-valmsg-replace="true"></span>
+        </div>
+        <div class="ow-form-group">
+            <label class="ow-label" for="Input_Password">Password</label>
+            <input class="ow-input" autocomplete="new-password" aria-required="true" placeholder="password" type="password" data-val="true" data-val-length="The Password must be at least 6 and at max 100 characters long." data-val-length-max="100" data-val-length-min="6" data-val-required="The Password field is required." id="Input_Password" maxlength="100" name="Input.Password" />
+            <span class="text-danger field-validation-valid" style="color: red; font-size: 0.85rem; margin-top: 0.5rem; display: block;" data-valmsg-for="Input.Password" data-valmsg-replace="true"></span>
+        </div>
+        <div class="ow-form-group">
+            <label class="ow-label" for="Input_ConfirmPassword">Confirm Password</label>
+            <input class="ow-input" autocomplete="new-password" aria-required="true" placeholder="password" type="password" data-val="true" data-val-equalto="The password and confirmation password do not match." data-val-equalto-other="*.Password" data-val-required="The Confirm password field is required." id="Input_ConfirmPassword" name="Input.ConfirmPassword" />
+            <span class="text-danger field-validation-valid" style="color: red; font-size: 0.85rem; margin-top: 0.5rem; display: block;" data-valmsg-for="Input.ConfirmPassword" data-valmsg-replace="true"></span>
+        </div>
+        <div class="ow-form-group">
+            <button id="registerSubmit" type="submit" class="ow-btn ow-btn--primary" style="width: 100%;">Register</button>
+        </div>
+    <input name="__RequestVerificationToken" type="hidden" value="CfDJ8ERODaP-nJ9IkN71XDIjm9YZxGYQynj9_BZlddZIcasTmwLP_iKDq1Qp8SYpqLigZoAv96Fbjo3UOM3ubZFqdU6gMlDY7FqvgjX_wl4zNu6wPeT-pjkY_Yg9eje0SUnIyXT5WYDIsCXhX7SearY38KM" /></form>
+</div>
+
+
+        </div>
+    </main>
+
+    <footer b-kant7sm97w class="ow-footer">
+        <div b-kant7sm97w class="ow-footer-inner">
+            <div b-kant7sm97w class="ow-footer-top">
+                <div b-kant7sm97w>
+                    <div b-kant7sm97w class="ow-footer-brand">ORBITWATCH</div>
+                    <p b-kant7sm97w style="color: #999; font-size: 0.95rem; max-width: 480px; margin-bottom: 1.25rem;">
+                        Satellite Mission, Telemetry & Orbital Incident Operations Infrastructure. Real-time celestial trajectory tracking and deep-space cataloging.
+                    </p>
+                    <div b-kant7sm97w class="ow-tag">SECTOR 04 // FLIGHT PROTOCOL // 2026 EDITION</div>
+                </div>
+
+                <div b-kant7sm97w>
+                    <div b-kant7sm97w class="ow-tag ow-tag--dark" style="color: #fff; margin-bottom: 1rem;">OPERATIONS</div>
+                    <ul b-kant7sm97w style="list-style: none; padding: 0; line-height: 2;">
+                        <li b-kant7sm97w><a style="color: #aaa;" href="/Missions">Mission Register</a></li>
+                        <li b-kant7sm97w><a style="color: #aaa;" href="/Satellites">Satellite Network</a></li>
+                        <li b-kant7sm97w><a style="color: #aaa;" href="/TrajectoryRecords">Telemetry Archive</a></li>
+                        <li b-kant7sm97w><a style="color: #aaa;" href="/Incidents">Incident Log</a></li>
+                    </ul>
+                </div>
+
+                <div b-kant7sm97w>
+                    <div b-kant7sm97w class="ow-tag ow-tag--dark" style="color: #fff; margin-bottom: 1rem;">SURVEILLANCE</div>
+                    <ul b-kant7sm97w style="list-style: none; padding: 0; line-height: 2;">
+                        <li b-kant7sm97w><a style="color: #aaa;" href="/SatelliteObservations">Observations</a></li>
+                        <li b-kant7sm97w><a style="color: #aaa;" href="/GroundStations">Ground Stations</a></li>
+                        <li b-kant7sm97w><a style="color: #aaa;" href="/Home/Privacy">Privacy Protocol</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div b-kant7sm97w class="ow-footer-bottom">
+                <span b-kant7sm97w>&copy; 2026 ORBITWATCH AEROSPACE CORP. ALL RIGHTS RESERVED.</span>
+                <span b-kant7sm97w>STATUS: NOMINAL • UTC LIVE FEED SYNCED</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/js/site.js?v=Ra9AnZqzBNCGDLe7UpGMuQk09ArZk0te47hrwzIII-I"></script>
+    
+    
+    <script src="/Identity/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="/Identity/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
+
+
+
+
+</body>
+</html>

@@ -4,6 +4,7 @@ using OrbitWatch.Data;
 using OrbitWatch.Models;
 using OrbitWatch.Repositories;
 using OrbitWatch.Services;
+using OrbitWatch.Services.Orbit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddScoped<ITrajectoryRecordRepository, TrajectoryRecordReposito
 builder.Services.AddScoped<ISatelliteObservationRepository, SatelliteObservationRepository>();
 builder.Services.AddScoped<IGroundStationRepository, GroundStationRepository>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddSingleton<IOrbitPropagationService, Sgp4OrbitPropagationService>();
 
 builder.Services.AddHttpClient<ISatelliteApiService, SatelliteApiService>(client =>
 {
