@@ -490,4 +490,9 @@
         }
     });
 
+    // Initialize if a satellite is already selected
+    if (satelliteSelect.value) {
+        satelliteSelect.dispatchEvent(new Event('change'));
+    }
+
 })();
