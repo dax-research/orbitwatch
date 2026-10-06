@@ -27,6 +27,8 @@ namespace OrbitWatch.Data
 
         public DbSet<Agency> Agencies { get; set; }
 
+        public DbSet<CelesTrakOrbitalDataCache> CelesTrakOrbitalDataCaches { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -61,6 +63,10 @@ namespace OrbitWatch.Data
 
             modelBuilder.Entity<Satellite>()
                 .HasIndex(s => s.NoradId)
+                .IsUnique();
+
+            modelBuilder.Entity<CelesTrakOrbitalDataCache>()
+                .HasIndex(c => c.NoradId)
                 .IsUnique();
 
             modelBuilder.Entity<GroundStation>()

@@ -27,6 +27,7 @@ builder.Services.AddScoped<ITrajectoryRecordRepository, TrajectoryRecordReposito
 builder.Services.AddScoped<ISatelliteObservationRepository, SatelliteObservationRepository>();
 builder.Services.AddScoped<IGroundStationRepository, GroundStationRepository>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<ICelesTrakOrbitalDataCacheRepository, CelesTrakOrbitalDataCacheRepository>();
 builder.Services.AddSingleton<IOrbitPropagationService, Sgp4OrbitPropagationService>();
 
 builder.Services.AddHttpClient<ISatelliteApiService, SatelliteApiService>(client =>
