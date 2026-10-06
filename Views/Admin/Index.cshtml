@@ -1,0 +1,49 @@
+@model IEnumerable<OrbitWatch.Models.Admin.UserViewModel>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="ow-section-header">
+    <h1 class="ow-title">User Management</h1>
+    <p class="ow-subtitle">Manage users and assign application roles.</p>
+</div>
+
+<div class="ow-content-box">
+    <table class="table ow-table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Username</th>
+                <th>Current Role</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@user.UserName</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(user.CurrentRole) || user.CurrentRole == "None")
+                        {
+                            <span class="ow-status">None</span>
+                        }
+                        else if (user.CurrentRole == "Admin")
+                        {
+                            <span class="ow-status ow-status--active">Admin</span>
+                        }
+                        else
+                        {
+                            <span class="ow-status">@user.CurrentRole</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="EditRole" asp-route-id="@user.Id" class="ow-btn ow-btn--secondary ow-btn--sm">Manage Role</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
