@@ -39,19 +39,14 @@ builder.Services.AddHttpClient<ISatelliteApiService, SatelliteApiService>(client
 
 var app = builder.Build();
 
-// Seed Roles
+// Seed Roles and Bootstrap Users
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { "Admin", "Manager", "Analyst" };
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
+    await OrbitWatch.Data.IdentityDataSeeder.SeedRolesAndUsersAsync(roleManager, userManager, logger);
 }
 
 // Configure the HTTP request pipeline.
