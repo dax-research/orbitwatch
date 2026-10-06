@@ -194,8 +194,9 @@
         trackingGroup.add(satelliteMarker);
 
         // Sub-satellite point on Earth surface
-        const subSatGeo = new THREE.CircleGeometry(0.8, 16);
-        const subSatMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, depthTest: false, transparent: true, opacity: 0.6 });
+        // Use a small sphere to avoid z-fighting and elongation issues
+        const subSatGeo = new THREE.SphereGeometry(0.3, 8, 8);
+        const subSatMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
         subSatPoint = new THREE.Mesh(subSatGeo, subSatMat);
         subSatPoint.visible = false;
         earthGroup.add(subSatPoint); // Belongs to Earth relative
@@ -203,6 +204,9 @@
         // Connection line (Nadir)
         const nadirMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
         const nadirGeo = new THREE.BufferGeometry();
+        // Initialize with 2 points so we can update them dynamically
+        const positions = new Float32Array(2 * 3);
+        nadirGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         nadirLine = new THREE.Line(nadirGeo, nadirMat);
         nadirLine.visible = false;
         trackingGroup.add(nadirLine);
@@ -326,7 +330,38 @@
 
         let currentSatWorldPos = null;
         if (satelliteMarker && satelliteMarker.visible) {
-            currentSatWorldPos = satelliteMarker.position.clone();
+            currentSatWorldPos = new THREE.Vector3();
+            satelliteMarker.getWorldPosition(currentSatWorldPos);
+            
+            // Calculate and continuously update the sub-satellite point's position
+            // Project radially to Earth surface + tiny offset for z-fighting
+            const surfaceWorld = currentSatWorldPos.clone().normalize().multiplyScalar(EARTH_RADIUS + 0.1);
+            
+            // Convert to earthGroup local space
+            const surfaceLocal = earthGroup.worldToLocal(surfaceWorld.clone());
+            if (subSatPoint) {
+                subSatPoint.position.copy(surfaceLocal);
+            }
+
+            // Update nadir line geometry
+            if (nadirLine && nadirLine.visible) {
+                const positions = nadirLine.geometry.attributes.position.array;
+                
+                // Point 1: Satellite
+                positions[0] = currentSatWorldPos.x;
+                positions[1] = currentSatWorldPos.y;
+                positions[2] = currentSatWorldPos.z;
+                
+                // Point 2: Sub-satellite point
+                const actualSurfaceWorld = new THREE.Vector3();
+                subSatPoint.getWorldPosition(actualSurfaceWorld);
+                
+                positions[3] = actualSurfaceWorld.x;
+                positions[4] = actualSurfaceWorld.y;
+                positions[5] = actualSurfaceWorld.z;
+                
+                nadirLine.geometry.attributes.position.needsUpdate = true;
+            }
         }
 
         if (isFollowing && currentSatWorldPos) {
@@ -399,30 +434,14 @@
                 // Marker Cartesians from ECI
                 const cartesian = eciToThree(pos.cartesianXKm, pos.cartesianYKm, pos.cartesianZKm);
                 
-                // Sub-satellite point belongs to Earth Group, so it needs to be placed on Earth surface
-                // We project the Cartesian coordinate down to Earth radius
-                const surfacePosWorld = cartesian.clone().normalize().multiplyScalar(EARTH_RADIUS);
-                // Convert world to local for Earth Group
-                const surfacePosLocal = earthGroup.worldToLocal(surfacePosWorld.clone());
-                
                 currentSatCartesian = cartesian;
 
                 // Update Markers
                 satelliteMarker.position.copy(cartesian);
                 satelliteMarker.visible = true;
 
-                // Sub-satellite point and line
-                subSatPoint.position.copy(surfacePosLocal);
-                // Orient flat to Earth surface
-                subSatPoint.lookAt(subSatPoint.position.clone().multiplyScalar(2)); 
+                // Make subSatPoint and nadirLine visible (their positions are updated in animate())
                 subSatPoint.visible = true;
-
-                const nadirPoints = [
-                    cartesian,
-                    surfacePosWorld
-                ];
-                nadirLine.geometry.dispose();
-                nadirLine.geometry = new THREE.BufferGeometry().setFromPoints(nadirPoints);
                 nadirLine.visible = true;
 
                 // Paths
