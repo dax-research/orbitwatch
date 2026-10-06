@@ -57,9 +57,9 @@
     // =========================================================================
     //  STATE
     // =========================================================================
-    let scene, camera, renderer, earth, satelliteMarker, satelliteGlow;
+    let scene, camera, renderer, earth, satelliteMarker;
     let subSatPoint, nadirLine;
-    let fullOrbitPathLine, next5MinPathLine, groundTrackLine;
+    let fullOrbitPathLine, next5MinPathLine;
     
     let animationId = null;
     let refreshTimerId = null;
@@ -70,7 +70,7 @@
     let initialized = false;
     let currentSatelliteId = null;
     let isFollowing = false;
-    let currentSatCartesian = null; // Last known satellite position {x, y, z}
+    let currentSatCartesian = null; // Last known satellite position {x, y, z} relative to Earth
 
     // =========================================================================
     //  COORDINATE CONVERSION
@@ -174,39 +174,26 @@
     }
 
     function createSatelliteMarker() {
-        // Improved Main Marker — slightly larger, more visible
-        const markerGeo = new THREE.OctahedronGeometry(2.2, 1); // Spherical-ish
+        // Improved Main Marker — small white point
+        const markerGeo = new THREE.OctahedronGeometry(1.2, 0); 
         const markerMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
         satelliteMarker = new THREE.Mesh(markerGeo, markerMat);
         satelliteMarker.visible = false;
-        scene.add(satelliteMarker);
-
-        // Outer Glow/Ring
-        const glowGeo = new THREE.SphereGeometry(3.5, 16, 16);
-        const glowMat = new THREE.MeshBasicMaterial({
-            color: 0xD92626,
-            transparent: true,
-            opacity: 0.4,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-        satelliteGlow = new THREE.Mesh(glowGeo, glowMat);
-        satelliteGlow.visible = false;
-        scene.add(satelliteGlow);
+        earth.add(satelliteMarker);
 
         // Sub-satellite point on Earth surface
         const subSatGeo = new THREE.CircleGeometry(0.8, 16);
-        const subSatMat = new THREE.MeshBasicMaterial({ color: 0xD92626, side: THREE.DoubleSide, depthTest: false });
+        const subSatMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, depthTest: false, transparent: true, opacity: 0.6 });
         subSatPoint = new THREE.Mesh(subSatGeo, subSatMat);
         subSatPoint.visible = false;
-        scene.add(subSatPoint);
+        earth.add(subSatPoint);
 
-        // Connection line
-        const nadirMat = new THREE.LineBasicMaterial({ color: 0xD92626, transparent: true, opacity: 0.5 });
+        // Connection line (Nadir)
+        const nadirMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
         const nadirGeo = new THREE.BufferGeometry();
         nadirLine = new THREE.Line(nadirGeo, nadirMat);
         nadirLine.visible = false;
-        scene.add(nadirLine);
+        earth.add(nadirLine);
     }
 
     function createPathLines() {
@@ -214,20 +201,13 @@
         const orbitMat = new THREE.LineBasicMaterial({ color: 0x888888, transparent: true, opacity: 0.4 });
         fullOrbitPathLine = new THREE.Line(new THREE.BufferGeometry(), orbitMat);
         fullOrbitPathLine.visible = false;
-        scene.add(fullOrbitPathLine);
+        earth.add(fullOrbitPathLine);
 
-        // 5-Minute Prediction Path (distinct color, e.g., bright yellow/orange to show direction)
-        const next5Mat = new THREE.LineBasicMaterial({ color: 0xFFAA00, linewidth: 2 });
+        // 5-Minute Prediction Path (distinct color, slightly brighter)
+        const next5Mat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2, transparent: true, opacity: 0.9 });
         next5MinPathLine = new THREE.Line(new THREE.BufferGeometry(), next5Mat);
         next5MinPathLine.visible = false;
-        scene.add(next5MinPathLine);
-
-        // Ground Track (red, subtle, projected on Earth)
-        const groundMat = new THREE.LineBasicMaterial({ color: 0xD92626, transparent: true, opacity: 0.6 });
-        // Since it might break across the dateline, we use LineSegments
-        groundTrackLine = new THREE.LineSegments(new THREE.BufferGeometry(), groundMat);
-        groundTrackLine.visible = false;
-        scene.add(groundTrackLine);
+        earth.add(next5MinPathLine);
     }
 
     // =========================================================================
@@ -284,12 +264,15 @@
     }
 
     function focusOnSatellite() {
-        if (!currentSatCartesian) return;
-        // Calculate spherical coordinates from cartesian
-        const r = Math.sqrt(currentSatCartesian.x**2 + currentSatCartesian.y**2 + currentSatCartesian.z**2);
-        spherical.theta = Math.atan2(currentSatCartesian.x, currentSatCartesian.z);
-        spherical.phi = Math.acos(currentSatCartesian.y / r);
-        // Add a slight offset so it's not looking directly down
+        if (!currentSatCartesian || !satelliteMarker) return;
+        
+        // Use world position since it's rotating with Earth
+        const worldPos = new THREE.Vector3();
+        satelliteMarker.getWorldPosition(worldPos);
+
+        const r = Math.sqrt(worldPos.x**2 + worldPos.y**2 + worldPos.z**2);
+        spherical.theta = Math.atan2(worldPos.x, worldPos.z);
+        spherical.phi = Math.acos(worldPos.y / r);
         spherical.phi = Math.max(0.1, spherical.phi - 0.2); 
         cameraDistance = 120; // zoom in somewhat
         updateCameraPosition();
@@ -326,27 +309,23 @@
     function animate() {
         animationId = requestAnimationFrame(animate);
 
-        // Slow Earth rotation ONLY if not following and not dragging
-        if (earth && !isDragging && !isFollowing) {
-            // Remove auto-rotation to keep trajectories synced correctly,
-            // or just rely on manual refresh/drag. We will remove Earth auto-rotation
-            // because SGP4 positions are ECEF (Earth-centered, Earth-fixed implicitly here)
-            // wait, if we rotate earth, we have to rotate the paths too. 
-            // Better to disable auto-rotation to keep tracking accurate relative to earth surface texture.
+        // Continuous Earth rotation
+        if (earth) {
+            earth.rotation.y += 0.0003;
         }
 
-        // Pulse satellite glow
-        if (satelliteGlow && satelliteGlow.visible) {
-            const scale = 1 + 0.15 * Math.sin(Date.now() * 0.003);
-            satelliteGlow.scale.set(scale, scale, scale);
+        let currentSatWorldPos = null;
+        if (satelliteMarker && satelliteMarker.visible) {
+            currentSatWorldPos = new THREE.Vector3();
+            satelliteMarker.getWorldPosition(currentSatWorldPos);
         }
 
-        if (isFollowing && currentSatCartesian) {
+        if (isFollowing && currentSatWorldPos) {
             // Keep camera roughly behind or above satellite
-            const r = Math.sqrt(currentSatCartesian.x**2 + currentSatCartesian.y**2 + currentSatCartesian.z**2);
+            const r = Math.sqrt(currentSatWorldPos.x**2 + currentSatWorldPos.y**2 + currentSatWorldPos.z**2);
             // Gradually interpolate towards satellite (smooth follow)
-            const targetTheta = Math.atan2(currentSatCartesian.x, currentSatCartesian.z);
-            let targetPhi = Math.acos(currentSatCartesian.y / r);
+            const targetTheta = Math.atan2(currentSatWorldPos.x, currentSatWorldPos.z);
+            let targetPhi = Math.acos(currentSatWorldPos.y / r);
             targetPhi = Math.max(0.1, targetPhi - 0.2);
             
             // Handle theta wrap-around for smooth interpolation
@@ -360,16 +339,12 @@
         }
 
         // Update DOM Overlay Label position
-        if (satelliteMarker && satelliteMarker.visible && currentSatCartesian) {
-            const vector = new THREE.Vector3(currentSatCartesian.x, currentSatCartesian.y, currentSatCartesian.z);
+        if (satelliteMarker && satelliteMarker.visible && currentSatWorldPos) {
+            const vector = currentSatWorldPos.clone();
             vector.project(camera);
             
             // Check if satellite is behind Earth
-            const distToSat = camera.position.distanceTo(new THREE.Vector3(currentSatCartesian.x, currentSatCartesian.y, currentSatCartesian.z));
-            // rough culling check: is angle between camera vector and earth center too tight?
-            // A simpler way: if vector.z > 1, it's behind the camera.
-            // if we really want to check occlusion by Earth, we can do a raycast or simple math.
-            // Simple math:
+            const distToSat = camera.position.distanceTo(currentSatWorldPos);
             const camLen = camera.position.length();
             const horizonDist = Math.sqrt(camLen * camLen - EARTH_RADIUS * EARTH_RADIUS);
             
@@ -421,9 +396,6 @@
                 satelliteMarker.position.set(cartesian.x, cartesian.y, cartesian.z);
                 satelliteMarker.visible = true;
 
-                satelliteGlow.position.set(cartesian.x, cartesian.y, cartesian.z);
-                satelliteGlow.visible = true;
-
                 // Sub-satellite point and line
                 subSatPoint.position.set(surfacePos.x, surfacePos.y, surfacePos.z);
                 subSatPoint.lookAt(0, 0, 0); // Orient flat to Earth surface
@@ -474,39 +446,14 @@
         next5MinPathLine.geometry.dispose();
         next5MinPathLine.geometry = new THREE.BufferGeometry().setFromPoints(fiveMinPoints);
         next5MinPathLine.visible = true;
-
-        // 3. Ground Track (with line breaks across the anti-meridian)
-        const groundPoints = [];
-        for (let i = 0; i < orbitPath.length - 1; i++) {
-            const p1 = orbitPath[i];
-            const p2 = orbitPath[i+1];
-            
-            // Check for ±180 longitude jump
-            if (Math.abs(p1.longitudeDegrees - p2.longitudeDegrees) > 180) {
-                // Break the line (skip adding segment)
-                continue; 
-            }
-
-            // slightly above surface to prevent z-fighting
-            const pt1 = geoToCartesian(p1.latitudeDegrees, p1.longitudeDegrees, 1); 
-            const pt2 = geoToCartesian(p2.latitudeDegrees, p2.longitudeDegrees, 1);
-            
-            groundPoints.push(new THREE.Vector3(pt1.x, pt1.y, pt1.z));
-            groundPoints.push(new THREE.Vector3(pt2.x, pt2.y, pt2.z));
-        }
-        groundTrackLine.geometry.dispose();
-        groundTrackLine.geometry = new THREE.BufferGeometry().setFromPoints(groundPoints);
-        groundTrackLine.visible = true;
     }
 
     function hideSatelliteMarker() {
         if (satelliteMarker) satelliteMarker.visible = false;
-        if (satelliteGlow) satelliteGlow.visible = false;
         if (subSatPoint) subSatPoint.visible = false;
         if (nadirLine) nadirLine.visible = false;
         if (fullOrbitPathLine) fullOrbitPathLine.visible = false;
         if (next5MinPathLine) next5MinPathLine.visible = false;
-        if (groundTrackLine) groundTrackLine.visible = false;
         if (satLabelOverlay) satLabelOverlay.style.display = 'none';
         currentSatCartesian = null;
         isFollowing = false;
