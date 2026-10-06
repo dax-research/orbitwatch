@@ -11,7 +11,7 @@
         <p class="ow-page-subtitle">Scientific observations, RF signal strength measurements, surface thermal imaging, and radar cross-section data.</p>
     </div>
     <div>
-        <a asp-action="Create" class="ow-btn">+ Log Scientific Observation</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Create" class="ow-btn">+ Log Scientific Observation</a> }
     </div>
 </section>
 
@@ -65,8 +65,8 @@
                         </td>
                         <td style="text-align: right; white-space: nowrap;">
                             <a asp-action="Details" asp-route-id="@obs.Id" class="ow-action" style="margin-right: 0.75rem;">Details</a>
-                            <a asp-action="Edit" asp-route-id="@obs.Id" class="ow-action" style="margin-right: 0.75rem;">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@obs.Id" class="ow-action ow-action--danger">Delete</a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Edit" asp-route-id="@obs.Id" class="ow-action" style="margin-right: 0.75rem;">Edit</a> }
+                            @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Delete" asp-route-id="@obs.Id" class="ow-action ow-action--danger">Delete</a> }
                         </td>
                     </tr>
                 }
@@ -80,6 +80,6 @@ else
         <div class="ow-eyebrow" style="justify-content: center;">NO SCIENTIFIC OBSERVATIONS RECORDED</div>
         <h2 style="font-size: 2.2rem; margin: 1rem 0;">Observational sensor feed is idle.</h2>
         <p style="color: #666; margin-bottom: 2rem;">Acquire optical, radar, or thermal readings from connected ground stations.</p>
-        <a asp-action="Create" class="ow-btn">+ Log First Observation</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Create" class="ow-btn">+ Log First Observation</a> }
     </div>
 }

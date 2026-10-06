@@ -14,7 +14,7 @@
         </p>
     </div>
     <div style="display: flex; gap: 1rem;">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="ow-btn">Edit Vector</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Edit" asp-route-id="@Model.Id" class="ow-btn">Edit Vector</a> }
         <a asp-action="Index" class="ow-btn ow-btn--secondary">← Return to Archive</a>
     </div>
 </section>

@@ -38,6 +38,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: Missions/Create
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Create()
         {
             await PopulateAgencies();
@@ -47,6 +48,7 @@ namespace OrbitWatch.Controllers
         // POST: Missions/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Create(Mission mission)
         {
             ModelState.Remove(nameof(mission.Agency));
@@ -63,6 +65,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: Missions/Edit/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id)
         {
             var mission = await _repository.GetByIdAsync(id);
@@ -80,6 +83,7 @@ namespace OrbitWatch.Controllers
         // POST: Missions/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id, Mission mission)
         {
             if (id != mission.Id)
@@ -101,6 +105,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: Missions/Delete/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var mission = await _repository.GetByIdAsync(id);
@@ -116,6 +121,7 @@ namespace OrbitWatch.Controllers
         // POST: Missions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _repository.DeleteAsync(id);

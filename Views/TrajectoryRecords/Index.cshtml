@@ -11,7 +11,7 @@
         <p class="ow-page-subtitle">Sub-kilometer celestial coordinate records, apogee/perigee altitude measurements, and orbital velocity vectors.</p>
     </div>
     <div>
-        <a asp-action="Create" class="ow-btn">+ Log Telemetry Vector</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Create" class="ow-btn">+ Log Telemetry Vector</a> }
     </div>
 </section>
 
@@ -61,8 +61,8 @@
                         <td><span class="ow-status">@record.OrbitType</span></td>
                         <td style="text-align: right; white-space: nowrap;">
                             <a asp-action="Details" asp-route-id="@record.Id" class="ow-action" style="margin-right: 0.75rem;">Details</a>
-                            <a asp-action="Edit" asp-route-id="@record.Id" class="ow-action" style="margin-right: 0.75rem;">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@record.Id" class="ow-action ow-action--danger">Delete</a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Edit" asp-route-id="@record.Id" class="ow-action" style="margin-right: 0.75rem;">Edit</a> }
+                            @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Delete" asp-route-id="@record.Id" class="ow-action ow-action--danger">Delete</a> }
                         </td>
                     </tr>
                 }
@@ -76,6 +76,6 @@ else
         <div class="ow-eyebrow" style="justify-content: center;">TELEMETRY STREAM OFFLINE</div>
         <h2 style="font-size: 2.2rem; margin: 1rem 0;">No coordinate vectors logged.</h2>
         <p style="color: #666; margin-bottom: 2rem;">Acquire celestial coordinates from ground stations to seed the archive.</p>
-        <a asp-action="Create" class="ow-btn">+ Log First Telemetry Vector</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Create" class="ow-btn">+ Log First Telemetry Vector</a> }
     </div>
 }

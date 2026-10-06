@@ -21,7 +21,7 @@
         </p>
     </div>
     <div style="display: flex; gap: 1rem;">
-        <a asp-action="Edit" asp-route-id="@Model.Satellite.Id" class="ow-btn">Edit Asset</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Edit" asp-route-id="@Model.Satellite.Id" class="ow-btn">Edit Asset</a> }
         <a asp-action="Index" class="ow-btn ow-btn--secondary">← Return to Catalogue</a>
     </div>
 </section>

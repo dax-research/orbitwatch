@@ -35,6 +35,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: GroundStations/Create
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Create()
         {
             await PopulateDropdowns();
@@ -44,6 +45,7 @@ namespace OrbitWatch.Controllers
         // POST: GroundStations/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Create(GroundStation station)
         {
             ModelState.Remove(nameof(station.Country));
@@ -68,6 +70,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: GroundStations/Edit/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id)
         {
             var station = await _repository.GetByIdAsync(id);
@@ -87,6 +90,7 @@ namespace OrbitWatch.Controllers
         // POST: GroundStations/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id, GroundStation station)
         {
             if (id != station.Id)
@@ -116,6 +120,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: GroundStations/Delete/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var station = await _repository.GetByIdAsync(id);
@@ -129,6 +134,7 @@ namespace OrbitWatch.Controllers
         // POST: GroundStations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _repository.DeleteAsync(id);

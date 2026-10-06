@@ -35,6 +35,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: SatelliteObservations/Create
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Create()
         {
             await PopulateSatellitesDropDownList();
@@ -44,6 +45,7 @@ namespace OrbitWatch.Controllers
         // POST: SatelliteObservations/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Create(SatelliteObservation observation)
         {
             ModelState.Remove(nameof(observation.Satellite));
@@ -64,6 +66,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: SatelliteObservations/Edit/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id)
         {
             var observation = await _repository.GetByIdAsync(id);
@@ -79,6 +82,7 @@ namespace OrbitWatch.Controllers
         // POST: SatelliteObservations/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Edit(int id, SatelliteObservation observation)
         {
             if (id != observation.Id)
@@ -104,6 +108,7 @@ namespace OrbitWatch.Controllers
         }
 
         // GET: SatelliteObservations/Delete/5
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var observation = await _repository.GetByIdAsync(id);
@@ -117,6 +122,7 @@ namespace OrbitWatch.Controllers
         // POST: SatelliteObservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _repository.DeleteAsync(id);

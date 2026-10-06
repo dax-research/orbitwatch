@@ -11,7 +11,7 @@
         <p class="ow-page-subtitle">Strategic satellite programs, exploration campaigns, and agency ownership records.</p>
     </div>
     <div>
-        <a asp-action="Create" class="ow-btn">+ New Mission</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Create" class="ow-btn">+ New Mission</a> }
     </div>
 </section>
 
@@ -55,8 +55,8 @@
 
                 <div class="ow-list-actions">
                     <a asp-action="Details" asp-route-id="@mission.Id" class="ow-action">Details</a>
-                    <a asp-action="Edit" asp-route-id="@mission.Id" class="ow-action">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@mission.Id" class="ow-action ow-action--danger">Delete</a>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Edit" asp-route-id="@mission.Id" class="ow-action">Edit</a> }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Delete" asp-route-id="@mission.Id" class="ow-action ow-action--danger">Delete</a> }
                 </div>
             </div>
             index++;
@@ -69,6 +69,6 @@ else
         <div class="ow-eyebrow" style="justify-content: center;">NO CAMPAIGNS REGISTERED</div>
         <h2 style="font-size: 2.2rem; margin: 1rem 0;">Mission register is currently clear.</h2>
         <p style="color: #666; margin-bottom: 2rem;">Initiate an operational baseline to begin tracking space assets.</p>
-        <a asp-action="Create" class="ow-btn">+ Register First Mission</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Create" class="ow-btn">+ Register First Mission</a> }
     </div>
 }

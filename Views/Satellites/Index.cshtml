@@ -11,7 +11,7 @@
         <p class="ow-page-subtitle">Tracked orbital spacecraft, space telescopes, radar imaging constellations, and lunar relay modules.</p>
     </div>
     <div>
-        <a asp-action="Create" class="ow-btn">+ Register Satellite</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Create" class="ow-btn">+ Register Satellite</a> }
     </div>
 </section>
 
@@ -58,8 +58,8 @@
 
                 <div class="ow-list-actions">
                     <a asp-action="Details" asp-route-id="@satellite.Id" class="ow-action">Details</a>
-                    <a asp-action="Edit" asp-route-id="@satellite.Id" class="ow-action">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@satellite.Id" class="ow-action ow-action--danger">Delete</a>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Edit" asp-route-id="@satellite.Id" class="ow-action">Edit</a> }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Delete" asp-route-id="@satellite.Id" class="ow-action ow-action--danger">Delete</a> }
                 </div>
             </div>
             index++;
@@ -72,6 +72,6 @@ else
         <div class="ow-eyebrow" style="justify-content: center;">NO CELESTIAL ASSETS LOGGED</div>
         <h2 style="font-size: 2.2rem; margin: 1rem 0;">Satellite catalogue is currently clear.</h2>
         <p style="color: #666; margin-bottom: 2rem;">Register an active or planned satellite asset to begin ephemeris calculations.</p>
-        <a asp-action="Create" class="ow-btn">+ Register First Satellite</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager")) { <a asp-action="Create" class="ow-btn">+ Register First Satellite</a> }
     </div>
 }
