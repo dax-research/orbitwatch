@@ -57,7 +57,8 @@
     // =========================================================================
     //  STATE
     // =========================================================================
-    let scene, camera, renderer, earth, satelliteMarker;
+    let scene, camera, renderer;
+    let earthGroup, trackingGroup, earth, satelliteMarker;
     let subSatPoint, nadirLine;
     let fullOrbitPathLine, next5MinPathLine;
     
@@ -74,18 +75,21 @@
 
     // =========================================================================
     //  COORDINATE CONVERSION
-    //  Geodetic (lat°, lon°, altKm) → Three.js Cartesian (x, y, z)
+    //  ECI Cartesian (X, Y, Z in km) → Three.js Cartesian (x, y, z)
+    //  SGP.NET ECI: Z is North, X is Vernal Equinox, Y completes right-handed
+    //  Three.js: Y is Up (North), X is Right, Z is towards viewer
     // =========================================================================
-    function geoToCartesian(latDeg, lonDeg, altKm) {
-        const latRad = latDeg * (Math.PI / 180);
-        const lonRad = lonDeg * (Math.PI / 180);
-        const r = EARTH_RADIUS + (altKm * SATELLITE_SCALE_FACTOR);
+    function eciToThree(xKm, yKm, zKm) {
+        // Apply scaling
+        const x = xKm * SATELLITE_SCALE_FACTOR;
+        const y = yKm * SATELLITE_SCALE_FACTOR;
+        const z = zKm * SATELLITE_SCALE_FACTOR;
 
-        return {
-            x: r * Math.cos(latRad) * Math.sin(lonRad),
-            y: r * Math.sin(latRad),
-            z: r * Math.cos(latRad) * Math.cos(lonRad)
-        };
+        // Axis Mapping:
+        // Three.y = ECI.z (North = Up)
+        // Three.x = ECI.x (Equinox = Right)
+        // Three.z = -ECI.y (Preserve right-handedness: X x Y = -ECI.y)
+        return new THREE.Vector3(x, z, -y);
     }
 
     // =========================================================================
@@ -99,6 +103,12 @@
 
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x0A0A0A);
+
+        earthGroup = new THREE.Group();
+        scene.add(earthGroup);
+
+        trackingGroup = new THREE.Group();
+        scene.add(trackingGroup);
 
         camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
         updateCameraPosition();
@@ -170,7 +180,9 @@
             depthWrite: false
         });
         const atmosphere = new THREE.Mesh(atmosGeometry, atmosMaterial);
-        earth.add(atmosphere);
+        earthGroup.add(earth);
+        earthGroup.add(clouds);
+        earthGroup.add(atmosphere);
     }
 
     function createSatelliteMarker() {
@@ -179,21 +191,21 @@
         const markerMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
         satelliteMarker = new THREE.Mesh(markerGeo, markerMat);
         satelliteMarker.visible = false;
-        earth.add(satelliteMarker);
+        trackingGroup.add(satelliteMarker);
 
         // Sub-satellite point on Earth surface
         const subSatGeo = new THREE.CircleGeometry(0.8, 16);
         const subSatMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, depthTest: false, transparent: true, opacity: 0.6 });
         subSatPoint = new THREE.Mesh(subSatGeo, subSatMat);
         subSatPoint.visible = false;
-        earth.add(subSatPoint);
+        earthGroup.add(subSatPoint); // Belongs to Earth relative
 
         // Connection line (Nadir)
         const nadirMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
         const nadirGeo = new THREE.BufferGeometry();
         nadirLine = new THREE.Line(nadirGeo, nadirMat);
         nadirLine.visible = false;
-        earth.add(nadirLine);
+        trackingGroup.add(nadirLine);
     }
 
     function createPathLines() {
@@ -201,13 +213,13 @@
         const orbitMat = new THREE.LineBasicMaterial({ color: 0x888888, transparent: true, opacity: 0.4 });
         fullOrbitPathLine = new THREE.Line(new THREE.BufferGeometry(), orbitMat);
         fullOrbitPathLine.visible = false;
-        earth.add(fullOrbitPathLine);
+        trackingGroup.add(fullOrbitPathLine);
 
         // 5-Minute Prediction Path (distinct color, slightly brighter)
         const next5Mat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2, transparent: true, opacity: 0.9 });
         next5MinPathLine = new THREE.Line(new THREE.BufferGeometry(), next5Mat);
         next5MinPathLine.visible = false;
-        earth.add(next5MinPathLine);
+        trackingGroup.add(next5MinPathLine);
     }
 
     // =========================================================================
@@ -266,9 +278,7 @@
     function focusOnSatellite() {
         if (!currentSatCartesian || !satelliteMarker) return;
         
-        // Use world position since it's rotating with Earth
-        const worldPos = new THREE.Vector3();
-        satelliteMarker.getWorldPosition(worldPos);
+        const worldPos = satelliteMarker.position.clone();
 
         const r = Math.sqrt(worldPos.x**2 + worldPos.y**2 + worldPos.z**2);
         spherical.theta = Math.atan2(worldPos.x, worldPos.z);
@@ -309,15 +319,14 @@
     function animate() {
         animationId = requestAnimationFrame(animate);
 
-        // Continuous Earth rotation
-        if (earth) {
-            earth.rotation.y += 0.0003;
+        // Continuous Earth rotation (Visual only, independent of trackingGroup)
+        if (earthGroup && !isDragging && !isFollowing) {
+            earthGroup.rotation.y += 0.0003;
         }
 
         let currentSatWorldPos = null;
         if (satelliteMarker && satelliteMarker.visible) {
-            currentSatWorldPos = new THREE.Vector3();
-            satelliteMarker.getWorldPosition(currentSatWorldPos);
+            currentSatWorldPos = satelliteMarker.position.clone();
         }
 
         if (isFollowing && currentSatWorldPos) {
@@ -387,23 +396,30 @@
                 const pos = data.currentPosition;
                 if (!pos || pos.latitudeDegrees === undefined) throw new Error('Invalid position data received.');
 
-                // Marker Cartesians
-                const cartesian = geoToCartesian(pos.latitudeDegrees, pos.longitudeDegrees, pos.altitudeKm);
-                const surfacePos = geoToCartesian(pos.latitudeDegrees, pos.longitudeDegrees, 0);
+                // Marker Cartesians from ECI
+                const cartesian = eciToThree(pos.cartesianXKm, pos.cartesianYKm, pos.cartesianZKm);
+                
+                // Sub-satellite point belongs to Earth Group, so it needs to be placed on Earth surface
+                // We project the Cartesian coordinate down to Earth radius
+                const surfacePosWorld = cartesian.clone().normalize().multiplyScalar(EARTH_RADIUS);
+                // Convert world to local for Earth Group
+                const surfacePosLocal = earthGroup.worldToLocal(surfacePosWorld.clone());
+                
                 currentSatCartesian = cartesian;
 
                 // Update Markers
-                satelliteMarker.position.set(cartesian.x, cartesian.y, cartesian.z);
+                satelliteMarker.position.copy(cartesian);
                 satelliteMarker.visible = true;
 
                 // Sub-satellite point and line
-                subSatPoint.position.set(surfacePos.x, surfacePos.y, surfacePos.z);
-                subSatPoint.lookAt(0, 0, 0); // Orient flat to Earth surface
+                subSatPoint.position.copy(surfacePosLocal);
+                // Orient flat to Earth surface
+                subSatPoint.lookAt(subSatPoint.position.clone().multiplyScalar(2)); 
                 subSatPoint.visible = true;
 
                 const nadirPoints = [
-                    new THREE.Vector3(cartesian.x, cartesian.y, cartesian.z),
-                    new THREE.Vector3(surfacePos.x, surfacePos.y, surfacePos.z)
+                    cartesian,
+                    surfacePosWorld
                 ];
                 nadirLine.geometry.dispose();
                 nadirLine.geometry = new THREE.BufferGeometry().setFromPoints(nadirPoints);
@@ -430,8 +446,8 @@
         // 1. Full Orbit Line
         const orbitPoints = [];
         for (let p of orbitPath) {
-            const pt = geoToCartesian(p.latitudeDegrees, p.longitudeDegrees, p.altitudeKm);
-            orbitPoints.push(new THREE.Vector3(pt.x, pt.y, pt.z));
+            const pt = eciToThree(p.cartesianXKm, p.cartesianYKm, p.cartesianZKm);
+            orbitPoints.push(pt);
         }
         fullOrbitPathLine.geometry.dispose();
         fullOrbitPathLine.geometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
@@ -440,8 +456,8 @@
         // 2. Next 5 Minutes Line
         const fiveMinPoints = [];
         for (let p of next5Minutes) {
-            const pt = geoToCartesian(p.latitudeDegrees, p.longitudeDegrees, p.altitudeKm);
-            fiveMinPoints.push(new THREE.Vector3(pt.x, pt.y, pt.z));
+            const pt = eciToThree(p.cartesianXKm, p.cartesianYKm, p.cartesianZKm);
+            fiveMinPoints.push(pt);
         }
         next5MinPathLine.geometry.dispose();
         next5MinPathLine.geometry = new THREE.BufferGeometry().setFromPoints(fiveMinPoints);

@@ -64,6 +64,16 @@ namespace OrbitWatch.Tests
             Assert.True(position.AltitudeKm > 0);
             Assert.True(position.AltitudeKm < 2000); // LEO
             Assert.True(position.VelocityKmPerSec > 5 && position.VelocityKmPerSec < 10);
+            
+            // Cartesian position check
+            Assert.NotEqual(0, position.CartesianXKm);
+            Assert.NotEqual(0, position.CartesianYKm);
+            Assert.NotEqual(0, position.CartesianZKm);
+            
+            // Check that the orbital radius is roughly Earth Radius + Altitude
+            double orbitalRadius = Math.Sqrt(Math.Pow(position.CartesianXKm, 2) + Math.Pow(position.CartesianYKm, 2) + Math.Pow(position.CartesianZKm, 2));
+            Assert.True(orbitalRadius > 6371);
+            Assert.True(orbitalRadius < 8000);
         }
 
         [Fact]

@@ -207,7 +207,10 @@ namespace OrbitWatch.Services.Orbit
                 LatitudeDegrees = geodetic.Latitude.Degrees,
                 LongitudeDegrees = geodetic.Longitude.Degrees,
                 AltitudeKm = geodetic.Altitude,
-                VelocityKmPerSec = eci.Velocity.Length
+                VelocityKmPerSec = eci.Velocity.Length,
+                CartesianXKm = eci.Position.X,
+                CartesianYKm = eci.Position.Y,
+                CartesianZKm = eci.Position.Z
             };
         }
     }

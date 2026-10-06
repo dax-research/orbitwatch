@@ -41,5 +41,20 @@ namespace OrbitWatch.Models.Orbit
         /// Indicates if the position was propagated using stale orbital elements.
         /// </summary>
         public bool IsStaleOrbitalData { get; set; }
+
+        /// <summary>
+        /// ECI Cartesian X coordinate in kilometers.
+        /// </summary>
+        public double CartesianXKm { get; set; }
+
+        /// <summary>
+        /// ECI Cartesian Y coordinate in kilometers.
+        /// </summary>
+        public double CartesianYKm { get; set; }
+
+        /// <summary>
+        /// ECI Cartesian Z coordinate in kilometers.
+        /// </summary>
+        public double CartesianZKm { get; set; }
     }
 }
