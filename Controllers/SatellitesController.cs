@@ -48,11 +48,10 @@ namespace OrbitWatch.Controllers
             {
                 try
                 {
-                    viewModel.CelesTrakData =
-                        await _satelliteApiService.GetSatelliteDataAsync(
-                            satellite.NoradId);
+                    var result = await _satelliteApiService.GetSatelliteDataAsync(satellite.NoradId);
+                    viewModel.CelesTrakData = result.Data;
                 }
-                catch (HttpRequestException)
+                catch (Exception)
                 {
                     viewModel.CelesTrakError =
                         "CelesTrak data is temporarily unavailable.";

@@ -4,6 +4,7 @@ using OrbitWatch.Data;
 using OrbitWatch.Models;
 using OrbitWatch.Repositories;
 using OrbitWatch.Services;
+using OrbitWatch.Services.Orbit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IMissionRepository, MissionRepository>();
@@ -26,6 +28,8 @@ builder.Services.AddScoped<ITrajectoryRecordRepository, TrajectoryRecordReposito
 builder.Services.AddScoped<ISatelliteObservationRepository, SatelliteObservationRepository>();
 builder.Services.AddScoped<IGroundStationRepository, GroundStationRepository>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<ICelesTrakOrbitalDataCacheRepository, CelesTrakOrbitalDataCacheRepository>();
+builder.Services.AddSingleton<IOrbitPropagationService, Sgp4OrbitPropagationService>();
 
 builder.Services.AddHttpClient<ISatelliteApiService, SatelliteApiService>(client =>
 {
@@ -34,6 +38,21 @@ builder.Services.AddHttpClient<ISatelliteApiService, SatelliteApiService>(client
 });
 
 var app = builder.Build();
+
+// Seed Roles
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roles = new[] { "Admin", "Manager", "Analyst" };
+    
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

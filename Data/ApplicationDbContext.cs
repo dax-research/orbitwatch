@@ -27,6 +27,8 @@ namespace OrbitWatch.Data
 
         public DbSet<Agency> Agencies { get; set; }
 
+        public DbSet<CelesTrakOrbitalDataCache> CelesTrakOrbitalDataCaches { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -61,6 +63,10 @@ namespace OrbitWatch.Data
 
             modelBuilder.Entity<Satellite>()
                 .HasIndex(s => s.NoradId)
+                .IsUnique();
+
+            modelBuilder.Entity<CelesTrakOrbitalDataCache>()
+                .HasIndex(c => c.NoradId)
                 .IsUnique();
 
             modelBuilder.Entity<GroundStation>()
@@ -98,6 +104,32 @@ namespace OrbitWatch.Data
                 .WithMany(a => a.GroundStations)
                 .HasForeignKey(g => g.AgencyId)
                 .OnDelete(DeleteBehavior.Restrict);
+            // Development Seed Data
+            modelBuilder.Entity<Mission>().HasData(
+                new Mission 
+                { 
+                    Id = 1, 
+                    Name = "ISS Operations", 
+                    Status = "Active", 
+                    AgencyId = 2, 
+                    LaunchDate = new DateTime(1998, 11, 20, 0, 0, 0, DateTimeKind.Utc) 
+                }
+            );
+
+            modelBuilder.Entity<Satellite>().HasData(
+                new Satellite 
+                { 
+                    Id = 1, 
+                    Name = "ISS (ZARYA)", 
+                    NoradId = "25544", 
+                    Status = "Active", 
+                    OrbitType = "LEO", 
+                    CountryId = 2, 
+                    AgencyId = 2, 
+                    MissionId = 1, 
+                    LaunchDate = new DateTime(1998, 11, 20, 0, 0, 0, DateTimeKind.Utc) 
+                }
+            );
         }
     }
 }

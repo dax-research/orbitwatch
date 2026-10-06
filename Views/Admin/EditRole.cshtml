@@ -1,0 +1,40 @@
+@model OrbitWatch.Models.Admin.EditRoleViewModel
+
+@{
+    ViewData["Title"] = "Manage User Role";
+}
+
+<div class="ow-section-header">
+    <h1 class="ow-title">Manage User Role</h1>
+    <p class="ow-subtitle">Assign an application role to the user.</p>
+</div>
+
+<div class="ow-content-box" style="max-width: 600px;">
+    <form asp-action="EditRole" method="post">
+        <input type="hidden" asp-for="UserId" />
+        
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 1rem; color: var(--ow-red);"></div>
+
+        <div class="ow-form-group">
+            <label>Email</label>
+            <input class="ow-input" value="@Model.Email" disabled />
+        </div>
+
+        <div class="ow-form-group">
+            <label asp-for="SelectedRole">Application Role</label>
+            <select asp-for="SelectedRole" class="ow-input" style="appearance: auto;">
+                <option value="">-- No Role --</option>
+                @foreach (var role in Model.AvailableRoles)
+                {
+                    <option value="@role">@role</option>
+                }
+            </select>
+            <span asp-validation-for="SelectedRole" class="text-danger" style="color: var(--ow-red);"></span>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="ow-btn">Save Changes</button>
+            <a asp-action="Index" class="ow-btn ow-btn--secondary" style="margin-left: 0.5rem;">Cancel</a>
+        </div>
+    </form>
+</div>

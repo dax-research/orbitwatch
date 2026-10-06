@@ -1,0 +1,127 @@
+@model IEnumerable<OrbitWatch.Models.Satellite>
+
+@{
+    ViewData["Title"] = "Orbital Tracking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header -->
+<section class="ow-page-header">
+    <div>
+        <div class="ow-eyebrow">SGP4 PROPAGATION // REAL-TIME ORBITAL POSITION</div>
+        <h1 class="ow-page-title">Orbital Tracking</h1>
+        <p class="ow-page-subtitle">3D globe visualization of satellite positions propagated from CelesTrak orbital elements via SGP4.</p>
+    </div>
+</section>
+
+<!-- Tracking Interface -->
+<div class="ow-tracking-layout">
+    <!-- Sidebar Controls -->
+    <aside class="ow-tracking-sidebar">
+        <div class="ow-tracking-control">
+            <label class="ow-label" for="owSatelliteSelect">Select Satellite</label>
+            <select class="ow-select" id="owSatelliteSelect">
+                <option value="">— Select Satellite —</option>
+                @foreach (var sat in Model)
+                {
+                    <option value="@sat.Id" data-norad="@sat.NoradId" data-name="@sat.Name" data-orbit="@sat.OrbitType" data-status="@sat.Status">
+                        @sat.Name — NORAD @sat.NoradId
+                    </option>
+                }
+            </select>
+        </div>
+
+        <!-- Satellite Info Panel -->
+        <div class="ow-tracking-info" id="owSatInfo" style="display: none;">
+            <div class="ow-tracking-info-header">
+                <span class="ow-tag ow-tag--dark">SATELLITE DATA</span>
+                <span class="ow-status ow-status--active" id="owSatStatus"></span>
+            </div>
+
+            <dl class="ow-tracking-dl">
+                <dt>NAME</dt>
+                <dd id="owInfoName">—</dd>
+                <dt>NORAD ID</dt>
+                <dd id="owInfoNorad">—</dd>
+                <dt>ORBIT</dt>
+                <dd id="owInfoOrbit">—</dd>
+            </dl>
+
+            <div class="ow-tracking-divider"></div>
+
+            <div class="ow-tracking-info-header">
+                <span class="ow-tag ow-tag--dark">PROPAGATED POSITION</span>
+                <span class="ow-tag" id="owPropTimestamp">—</span>
+            </div>
+
+            <dl class="ow-tracking-dl">
+                <dt>LATITUDE</dt>
+                <dd id="owInfoLat">—</dd>
+                <dt>LONGITUDE</dt>
+                <dd id="owInfoLon">—</dd>
+                <dt>ALTITUDE</dt>
+                <dd id="owInfoAlt">—</dd>
+                <dt>VELOCITY</dt>
+                <dd id="owInfoVel">—</dd>
+            </dl>
+
+            <div class="ow-tracking-divider"></div>
+
+            <button class="ow-btn ow-btn--secondary" id="owRefreshBtn" style="width: 100%; margin-top: 0.5rem;">
+                ↻ Refresh Position
+            </button>
+
+            <div class="ow-tracking-divider"></div>
+
+            <div class="ow-tracking-info-header">
+                <span class="ow-tag ow-tag--dark">CAMERA CONTROLS</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <button class="ow-btn ow-btn--secondary" id="owFocusBtn" style="flex: 1; font-size: 0.8rem; padding: 0.4rem;">
+                    Focus Satellite
+                </button>
+                <button class="ow-btn ow-btn--secondary" id="owFollowBtn" style="flex: 1; font-size: 0.8rem; padding: 0.4rem;">
+                    Follow: OFF
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading/Error States -->
+        <div class="ow-tracking-message" id="owLoadingMsg" style="display: none;">
+            <span class="ow-tag">ACQUIRING SIGNAL…</span>
+        </div>
+
+        <div class="ow-tracking-message ow-tracking-message--error" id="owErrorMsg" style="display: none;">
+            <span class="ow-tag" style="color: var(--ow-red);">SIGNAL LOST</span>
+            <p id="owErrorText"></p>
+        </div>
+    </aside>
+
+    <!-- Globe Container -->
+    <div class="ow-tracking-globe-wrap" style="position: relative;">
+        <div id="owGlobeContainer" class="ow-tracking-globe" style="position: relative; width: 100%; height: 100%;">
+            <div class="ow-tracking-globe-placeholder" id="owGlobePlaceholder">
+                <div class="ow-tracking-globe-placeholder-inner">
+                    <div class="ow-eyebrow" style="justify-content: center;">3D ORBITAL VISUALIZATION</div>
+                    <p style="color: var(--ow-muted); font-size: 0.92rem; margin-top: 0.5rem;">
+                        Select a satellite to initialize globe tracking.
+                    </p>
+                </div>
+            </div>
+            <canvas id="owGlobeCanvas"></canvas>
+            
+            <!-- Dynamic DOM Overlay for Satellite Label -->
+            <div id="owSatLabelOverlay" style="position: absolute; top: 0; left: 0; pointer-events: none; display: none; color: white; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.2); text-align: center; white-space: nowrap; transform: translate(-50%, -100%); margin-top: -10px;">
+                <div id="owSatLabelName" style="font-weight: 600; letter-spacing: 1px;"></div>
+                <div id="owSatLabelNorad" style="font-size: 0.75rem; color: #aaa;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+            integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/tracking-globe.js" asp-append-version="true"></script>
+}

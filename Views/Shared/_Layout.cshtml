@@ -41,6 +41,11 @@
                     </a>
                 </li>
                 <li>
+                    <a asp-controller="Tracking" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tracking" ? "active" : "")">
+                        Tracking
+                    </a>
+                </li>
+                <li>
                     <a asp-controller="TrajectoryRecords" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "TrajectoryRecords" ? "active" : "")">
                         Trajectories
                     </a>
@@ -60,6 +65,14 @@
                         Ground Stations
                     </a>
                 </li>
+                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-controller="Admin" asp-action="Index" class="ow-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")">
+                            User Management
+                        </a>
+                    </li>
+                }
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <li>
