@@ -106,9 +106,9 @@ namespace OrbitWatch.Controllers.Api
                 }
 
                 var fiveMinTimestamps = new List<DateTime>();
-                for (int m = 1; m <= 5; m++)
+                for (int s = 0; s <= 300; s += 30)
                 {
-                    fiveMinTimestamps.Add(targetTime.AddMinutes(m));
+                    fiveMinTimestamps.Add(targetTime.AddSeconds(s));
                 }
 
                 var currentPosition = _orbitPropagationService.GetPosition(gpData, targetTime);

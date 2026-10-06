@@ -164,5 +164,65 @@ namespace OrbitWatch.Tests
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
         }
+
+        [Fact]
+        public async Task GetTrajectory_GeneratesFiveMinutePath_Correctly()
+        {
+            // Arrange
+            var satelliteId = 1;
+            var noradId = "25544";
+            var satellite = new Satellite { Id = satelliteId, NoradId = noradId };
+            var gpData = new CelesTrakGpData { NoradCatalogId = 25544, MeanMotion = 15.5 };
+            var apiResult = new CelesTrakResult { Data = gpData, IsStale = false };
+
+            _repoMock.Setup(r => r.GetByIdAsync(satelliteId)).ReturnsAsync(satellite);
+            _apiServiceMock.Setup(s => s.GetSatelliteDataAsync(noradId)).ReturnsAsync(apiResult);
+
+            _propagationServiceMock.Setup(p => p.GetPosition(gpData, It.IsAny<DateTime>()))
+                .Returns((CelesTrakGpData data, DateTime t) => new SatellitePosition { TimestampUtc = t, CartesianXKm = 1000 });
+            
+            var pathList = new List<SatellitePosition>();
+            var next5MinList = new List<SatellitePosition>();
+            
+            // Mock propagation to return list of requested times
+            _propagationServiceMock.Setup(p => p.GetPositions(gpData, It.IsAny<IEnumerable<DateTime>>()))
+                .Returns((CelesTrakGpData data, IEnumerable<DateTime> times) => 
+                {
+                    var list = new List<SatellitePosition>();
+                    foreach(var t in times)
+                    {
+                        list.Add(new SatellitePosition { TimestampUtc = t, CartesianXKm = 1000 });
+                    }
+                    return list;
+                });
+
+            // Act
+            var result = await _controller.GetTrajectory(satelliteId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var responseObj = okResult.Value;
+            
+            var next5Minutes = responseObj.GetType().GetProperty("next5Minutes").GetValue(responseObj, null) as IReadOnlyList<SatellitePosition>;
+            var currentPosition = responseObj.GetType().GetProperty("currentPosition").GetValue(responseObj, null) as SatellitePosition;
+
+            Assert.NotNull(next5Minutes);
+            // From s=0 to s=300 in 30 sec steps -> 11 points
+            Assert.Equal(11, next5Minutes.Count);
+            
+            // Starts exactly at current position (t + 0)
+            Assert.Equal(next5Minutes[0].TimestampUtc, currentPosition.TimestampUtc);
+            
+            // Monotonically increasing by 30 seconds
+            for (int i = 1; i < next5Minutes.Count; i++)
+            {
+                var diff = next5Minutes[i].TimestampUtc - next5Minutes[i-1].TimestampUtc;
+                Assert.Equal(TimeSpan.FromSeconds(30), diff);
+            }
+
+            // Total duration is 300 seconds
+            var totalDuration = next5Minutes[^1].TimestampUtc - next5Minutes[0].TimestampUtc;
+            Assert.Equal(TimeSpan.FromMinutes(5), totalDuration);
+        }
     }
 }
